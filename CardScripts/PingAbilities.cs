@@ -7,7 +7,7 @@ public class PingAbilities : CardAbilities
 {
     public override void OnCompile()
     {
-        PlayerManager.CmdGMChangeVariables(1);
+        PlayerManager.CmdGMPlayerHealth(10);
     }
 
     public override void OnExecute()

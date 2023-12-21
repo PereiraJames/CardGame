@@ -8,7 +8,7 @@ public class FD_CS : CardAbilities
     public override void OnCompile()
     {
         PlayerManager.CmdGMPlayerHealth(2);
-        PlayerManager.CmdGMEnemyHealth(1);
+        PlayerManager.CmdGMEnemyHealth(-1);
     }
 
     public override void OnExecute()

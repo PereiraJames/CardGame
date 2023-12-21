@@ -120,14 +120,27 @@ public class PlayerManager : NetworkBehaviour
                 card.GetComponent<CardFlipper>().Flip();
             }
             CardsPlayed++;
-            PlayerManager pm = NetworkClient.connection.identity.GetComponent<PlayerManager>();
-            pm.IsMyTurn = !pm.IsMyTurn;
         }
         else
         {
             Debug.Log("ASJKASJKDNAJISBNDASBDJ");
         }
     }
+
+    [Command]
+    public void CmdEndTurn()
+    {
+        RpcEndTurn();
+    }
+
+    [ClientRpc]
+    public void RpcEndTurn()
+    {
+        // PlayerManager pm = NetworkClient.connection.identity.GetComponent<PlayerManager>();
+        // pm.IsMyTurn = !pm.IsMyTurn;
+        GameManager.EndTurn();
+    }
+    
 
     [Command]
     public void CmdGMChangeState(string stateRequest)

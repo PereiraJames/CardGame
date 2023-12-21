@@ -18,9 +18,13 @@ public class DrawCards : NetworkBehaviour
         NetworkIdentity networkIdentity = NetworkClient.connection.identity;
         PlayerManager = networkIdentity.GetComponent<PlayerManager>();
 
-        if (GameManager.GameState == "Initialize {}")
+        if (GameManager.GameState == "Ready")
         {
             IntializeClick();
+        }
+        else if (GameManager.GameState == "End Turn")
+        {
+            Endturn();
         }
         else if (GameManager.GameState == "Execute {}")
         {
@@ -32,6 +36,11 @@ public class DrawCards : NetworkBehaviour
     {
         PlayerManager.CmdDealCards();
         PlayerManager.CardsPlayed = 0;
+    }
+
+    void Endturn()
+    {
+        PlayerManager.CmdEndTurn();
     }
 
     void ExecuteClick()

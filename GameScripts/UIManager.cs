@@ -41,10 +41,13 @@ public class UIManager : NetworkBehaviour
                 if (PlayerManager.IsMyTurn)
                 {
                     PlayerManager.PlayerSlot.GetComponent<Outline>().effectColor = Color.red;
+                    PlayerManager.EnemySlot.GetComponent<Outline>().effectColor = blueColor;
+
                 }
                 else
                 {
                     PlayerManager.EnemySlot.GetComponent<Outline>().effectColor = Color.red;
+                    PlayerManager.PlayerSlot.GetComponent<Outline>().effectColor = blueColor;
                 }
             }
             else if (turnOrder > 0)
@@ -52,18 +55,20 @@ public class UIManager : NetworkBehaviour
                 if(PlayerManager.IsMyTurn)
                 {
                     PlayerManager.PlayerSlot.GetComponent<Outline>().effectColor = Color.red;
-                    if(turnOrder > 1)
-                    {   
-                        PlayerManager.EnemySlot.GetComponent<Outline>().effectColor = blueColor;
-                    }
+                    PlayerManager.EnemySlot.GetComponent<Outline>().effectColor = blueColor;
+                    // if(turnOrder > 1)
+                    // {   
+                    //     PlayerManager.EnemySlot.GetComponent<Outline>().effectColor = blueColor;
+                    // }
                 }
                 else
                 {
                     PlayerManager.EnemySlot.GetComponent<Outline>().effectColor = Color.red;
-                    if (turnOrder > 1)
-                    {
-                        PlayerManager.PlayerSlot.GetComponent<Outline>().effectColor = blueColor;
-                    }
+                    PlayerManager.PlayerSlot.GetComponent<Outline>().effectColor = blueColor;
+                    // if (turnOrder > 1)
+                    // {
+                    //     PlayerManager.PlayerSlot.GetComponent<Outline>().effectColor = blueColor;
+                    // }
                 }
             }
             

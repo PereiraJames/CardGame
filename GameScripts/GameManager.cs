@@ -7,7 +7,7 @@ public class GameManager : NetworkBehaviour
 {
     public UIManager UIManager;
     public int TurnOrder = 0;
-    public string GameState = "Initialize {}";
+    public string GameState = "Ready";
     public int PlayerHealth = 0;
     public int EnemyHealth = 0;
     public int PlayerVariables = 0;
@@ -60,6 +60,12 @@ public class GameManager : NetworkBehaviour
             ChangeGameState("Execute {}");
 
         }
+    }
+
+    public void EndTurn()
+    {
+        TurnOrder++;
+        UIManager.HighlightTurn(TurnOrder);
     }
 
     public void ChangeBP(int playerBp, int enemyBp, bool isOwned)
