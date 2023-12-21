@@ -7,24 +7,20 @@ public class CardFlipper : MonoBehaviour
 {
     public Sprite CardFront;
     public Sprite CardBack;
-    public Sprite CyanCardFront;
-    public Sprite CyanCardBack;
-    public Sprite MagCardFront;
-    public Sprite MagCardBack;
 
     public void SetSprite(string type)
     {
-        if (type == "cyan")
-        {
-            CardFront = CyanCardFront;
-            CardBack = CyanCardBack;
-        }
-        else if (type == "magenta")
-        {
-            gameObject.GetComponent<Image>().sprite = MagCardFront;
-            CardFront = MagCardFront;
-            CardBack = MagCardBack;
-        }
+        // if (type == "cyan")
+        // {
+        //     CardFront = CyanCardFront;
+        //     CardBack = CyanCardBack;
+        // }
+        // else if (type == "magenta")
+        // {
+        //     gameObject.GetComponent<Image>().sprite = MagCardFront;
+        //     CardFront = MagCardFront;
+        //     CardBack = MagCardBack;
+        // }
     }
     
     public void Flip()

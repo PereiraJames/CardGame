@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class UD_CS : CardAbilities
+public class FD_CS : CardAbilities
 {
     public override void OnCompile()
     {
-        PlayerManager.CmdGMEnemyHealth(-10);
+        PlayerManager.CmdGMPlayerHealth(2);
+        PlayerManager.CmdGMEnemyHealth(1);
     }
 
     public override void OnExecute()
