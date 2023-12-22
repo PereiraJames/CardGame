@@ -8,6 +8,9 @@ public class PlayerManager : NetworkBehaviour
     public GameObject Ping;
     public GameObject UD;
     public GameObject FD;
+    public GameObject RS;
+    public GameObject MG;
+
     public GameObject PlayerArea;
     public GameObject EnemyArea;
     public GameObject PlayerSlot;
@@ -60,6 +63,8 @@ public class PlayerManager : NetworkBehaviour
         cards.Add(Ping);
         cards.Add(UD);
         cards.Add(FD);
+        cards.Add(MG);
+        cards.Add(RS);
     }
 
     [Command]
