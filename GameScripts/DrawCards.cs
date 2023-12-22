@@ -24,28 +24,33 @@ public class DrawCards : NetworkBehaviour
         }
         else if (GameManager.GameState == "End Turn")
         {
-            Endturn();
+            if (PlayerManager.IsMyTurn)
+            {
+                Endturn();
+            }
         }
-        else if (GameManager.GameState == "Execute {}")
-        {
-            ExecuteClick();
-        }
+        // else if (GameManager.GameState == "Execute {}")
+        // {
+        //     ExecuteClick();
+        // }
     }
 
     void IntializeClick()
     {
-        PlayerManager.CmdDealCards();
-        PlayerManager.CardsPlayed = 0;
+        PlayerManager.CmdDealCards(5);
+        PlayerManager.CmdGMChangeState("End Turn");
+
     }
 
     void Endturn()
     {
         PlayerManager.CmdEndTurn();
+        PlayerManager.CmdDealCards(1);
     }
 
-    void ExecuteClick()
-    {
-        PlayerManager.CmdExecute();
-        PlayerManager.CmdGMChangeState("Initialize {}");
-    }
+    // void ExecuteClick()
+    // {
+    //     PlayerManager.CmdExecute();
+    //     PlayerManager.CmdGMChangeState("Initialize {}");
+    // }
 }

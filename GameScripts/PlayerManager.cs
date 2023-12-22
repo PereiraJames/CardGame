@@ -63,15 +63,14 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdDealCards()
+    public void CmdDealCards(int cardAmount)
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < cardAmount; i++)
         {
             GameObject card = Instantiate(cards[Random.Range(0,cards.Count)], new Vector3(0,0,0), Quaternion.identity);
             NetworkServer.Spawn(card, connectionToClient);
             RpcShowCard(card, "Dealt");
         }
-        RpcGMChangeState("Compile {}");
     }
 
     public void PlayCard(GameObject card)
@@ -136,8 +135,8 @@ public class PlayerManager : NetworkBehaviour
     [ClientRpc]
     public void RpcEndTurn()
     {
-        // PlayerManager pm = NetworkClient.connection.identity.GetComponent<PlayerManager>();
-        // pm.IsMyTurn = !pm.IsMyTurn;
+        PlayerManager pm = NetworkClient.connection.identity.GetComponent<PlayerManager>();
+        pm.IsMyTurn = !pm.IsMyTurn;
         GameManager.EndTurn();
     }
     
@@ -153,7 +152,7 @@ public class PlayerManager : NetworkBehaviour
     void RpcGMChangeState(string stateRequest)
     {
         GameManager.ChangeGameState(stateRequest);
-        if (stateRequest == "Compile {}")
+        if (stateRequest == "End Turn")
         {
             GameManager.ChangeReadyClicks();
         }
@@ -171,23 +170,29 @@ public class PlayerManager : NetworkBehaviour
         GameManager.CardPlayed();
     }
 
-    [Command]
-    public void CmdExecute()
-    {
-        RpcExecute();
-    }
+    // [Command]
+    // public void CmdExecute()
+    // {
+    //     RpcExecute();
+    // }
 
-    [ClientRpc]
-    void RpcExecute()
-    {
-        for (int i = 0; i < PlayerSockets.Count; i++)
-        {
-            PlayerSockets[i].transform.GetComponentInChildren<CardAbilities>().OnExecute();
-            PlayerSockets[i].transform.GetChild(0).gameObject.transform.SetParent(PlayerYard.transform, false);
-            EnemySockets[i].transform.GetChild(0).gameObject.transform.SetParent(EnemyYard.transform, false);
-        }
-    }
+    // [ClientRpc]
+    // void RpcExecute()
+    // {
+    //     for (int i = 0; i < PlayerSockets.Count; i++)
+    //     {
+    //         PlayerSockets[i].transform.GetComponentInChildren<CardAbilities>().OnExecute();
+    //         PlayerSockets[i].transform.GetChild(0).gameObject.transform.SetParent(PlayerYard.transform, false);
+    //         EnemySockets[i].transform.GetChild(0).gameObject.transform.SetParent(EnemyYard.transform, false);
+    //     }
+    // }
 
+
+
+
+
+
+    //CARD ABILITIES
     [Command]
     public void CmdGMChangeVariables(int variables)
     {

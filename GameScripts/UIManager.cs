@@ -21,8 +21,8 @@ public class UIManager : NetworkBehaviour
 
     public void UpdatePlayerText()
     {
-        PlayerText.GetComponent<Text>().text = "Player BP: " + GameManager.PlayerHealth + "\nPlayer Variables: " + GameManager.PlayerVariables;
-        EnemyText.GetComponent<Text>().text = "Enemy BP: " + GameManager.EnemyHealth + "\nEnemy Variables: " + GameManager.EnemyVariables;
+        PlayerText.GetComponent<Text>().text = "Player Health: " + GameManager.PlayerHealth + "\nPlayer Variables: " + GameManager.PlayerVariables;
+        EnemyText.GetComponent<Text>().text = "Enemy Health: " + GameManager.EnemyHealth + "\nEnemy Variables: " + GameManager.EnemyVariables;
     }
 
     public void UpdateButtonText(string gameState)
@@ -34,8 +34,7 @@ public class UIManager : NetworkBehaviour
     public void HighlightTurn(int turnOrder)
     {
         PlayerManager = NetworkClient.connection.identity.GetComponent<PlayerManager>();
-        if (turnOrder < 10)
-        {
+
             if (turnOrder == 0)
             {
                 if (PlayerManager.IsMyTurn)
@@ -72,6 +71,6 @@ public class UIManager : NetworkBehaviour
                 }
             }
             
-        }
+        
     }
 }

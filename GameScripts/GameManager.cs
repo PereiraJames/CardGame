@@ -8,8 +8,8 @@ public class GameManager : NetworkBehaviour
     public UIManager UIManager;
     public int TurnOrder = 0;
     public string GameState = "Ready";
-    public int PlayerHealth = 0;
-    public int EnemyHealth = 0;
+    public int PlayerHealth = 40;
+    public int EnemyHealth = 40;
     public int PlayerVariables = 0;
     public int EnemyVariables = 0;
 
@@ -23,6 +23,11 @@ public class GameManager : NetworkBehaviour
         UIManager.UpdateButtonText(GameState); 
     }
 
+    public void Update()
+    {
+
+    }
+
     public void ChangeGameState(string stateRequest)
     {
         if (stateRequest == "Initialize {}")
@@ -30,11 +35,11 @@ public class GameManager : NetworkBehaviour
             ReadyClicks = 0;
             GameState = "Initialize {}";
         }
-        else if (stateRequest == "Compile {}")
+        else if (stateRequest == "End Turn")
         {
             if (ReadyClicks == 1)
             {
-                GameState = "Compile {}";
+                GameState = "End Turn";
                 UIManager.HighlightTurn(TurnOrder);
             }
         }
@@ -53,13 +58,38 @@ public class GameManager : NetworkBehaviour
 
     public void CardPlayed()
     {
+        Debug.Log("Player: " + PlayerHealth);
+        Debug.Log("Enemy" + EnemyHealth);
         TurnOrder++;
         UIManager.HighlightTurn(TurnOrder);
-        if (TurnOrder == 10)
+        if(isOwned)
         {
-            ChangeGameState("Execute {}");
-
+            if (PlayerHealth <= 0)
+            {
+                Debug.Log("PLAYER2 WINS!");
+            }
+            else if(EnemyHealth <= 0)
+            {
+                Debug.Log("PLAYER1 Wins!");
+            }
         }
+        else if (!isOwned)
+        {
+            if (PlayerHealth <= 0)
+            {
+                Debug.Log("PLAYER2 WINS!");
+            }
+            else if(EnemyHealth <= 0)
+            {
+                Debug.Log("PLAYER1 Wins!");
+            }
+        }
+
+        // if (TurnOrder == 10)
+        // {
+        //     ChangeGameState("Execute {}");
+
+        // }
     }
 
     public void EndTurn()
