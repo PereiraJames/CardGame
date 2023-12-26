@@ -8,6 +8,7 @@ public class DragDrop : NetworkBehaviour
     public GameManager GameManager;
     public GameObject Canvas;
     public PlayerManager PlayerManager;
+    public RectTransform PlayerSlot;
 
     private bool isDragging = false;
     private bool isOverDropZone = false;
@@ -18,6 +19,7 @@ public class DragDrop : NetworkBehaviour
 
     private void Start()
     {
+        PlayerSlot = GameObject.Find("PlayerSlot").GetComponent<RectTransform>();
         GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         Canvas = GameObject.Find("Main Canvas");
         NetworkIdentity networkIdentity = NetworkClient.connection.identity;
@@ -55,14 +57,17 @@ public class DragDrop : NetworkBehaviour
     }
 
     public void StartDrag()
-    {
-        if(!isDraggable)
+    {   
+        if(transform.parent != PlayerSlot)
         {
-            return;
+            if(!isDraggable)
+            {
+                return;
+            }
+            startPosition = transform.position;
+            startParent = transform.parent.gameObject;
+            isDragging = true;
         }
-        startPosition = transform.position;
-        startParent = transform.parent.gameObject;
-        isDragging = true;
     }
 
     public void EndDrag()

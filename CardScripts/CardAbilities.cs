@@ -16,4 +16,6 @@ public abstract class CardAbilities : NetworkBehaviour
     public abstract void OnCompile();
 
     public abstract void OnExecute();
+
+    public abstract void OnAttack();
 }

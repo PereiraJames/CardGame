@@ -14,4 +14,9 @@ public class UD_CS : CardAbilities
     {
         PlayerManager.CmdChangeBP(2,1);
     }
+
+    public override void OnAttack()
+    {
+        Debug.Log(" ");
+    }
 }

@@ -61,10 +61,10 @@ public class PlayerManager : NetworkBehaviour
     public override void OnStartServer()
     {
         cards.Add(Ping);
-        cards.Add(UD);
+        // cards.Add(UD);
         cards.Add(FD);
-        cards.Add(MG);
-        cards.Add(RS);
+        // cards.Add(MG);
+        // cards.Add(RS);
     }
 
     [Command]
@@ -82,6 +82,18 @@ public class PlayerManager : NetworkBehaviour
     {
         card.GetComponent<CardAbilities>().OnCompile();
         CmdPlayCard(card);
+    }
+
+    [Command]
+    public void CmdCardAttack(GameObject card)
+    {
+        RpcCardAttack(card);
+    }
+
+    [ClientRpc]
+    void RpcCardAttack(GameObject card)
+    {
+        card.GetComponent<CardAbilities>().OnAttack();
     }
 
     [Command]

@@ -19,7 +19,7 @@ public class GameManager : NetworkBehaviour
     void Start()
     {
         UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
-        UIManager.UpdatePlayerText();
+        // UIManager.UpdatePlayerText();
         UIManager.UpdateButtonText(GameState); 
     }
 
