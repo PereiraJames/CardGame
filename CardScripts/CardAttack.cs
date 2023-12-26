@@ -11,12 +11,18 @@ public class CardAttack : NetworkBehaviour
     public PlayerManager PlayerManager;
     public RectTransform RectPlayerSlot;
 
+    List <GameObject> EnemyPlayedCards = new List<GameObject>();
+    List <GameObject> PlayerPlayedCards = new List<GameObject>();
+
     public GameObject EnemySlot;
     public GameObject PlayerSlot;
+    public GameObject AttackingDisplay;
+    public GameObject Display;
 
     private bool isDragging = false;
     private bool isOverDropZone = false;
     private bool isDraggable = true;
+    private bool isAttacking = false;
 
     private GameObject dropZone;
     private GameObject startParent;
@@ -48,39 +54,79 @@ public class CardAttack : NetworkBehaviour
 
     public void OnClicked()
     {
-        if(transform.parent == RectPlayerSlot)
-        {
-            List <GameObject> EnemyPlayedCards = new List<GameObject>();
-            List <GameObject> PlayerPlayedCards = new List<GameObject>();
-            
-            foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
-            {
-                if (child.gameObject.tag == "Cards")
+        if (!isAttacking)
+        {   
+            gameObject.GetComponent<Outline>().effectColor = Color.white;
+            gameObject.GetComponent<Outline>().effectDistance = new Vector2(10,10);
+            if(transform.parent == RectPlayerSlot)
+            {               
+                foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
                 {
-                    PlayerPlayedCards.Add(child.gameObject);
+                    if (child.gameObject.tag == "Cards")
+                    {
+                        PlayerPlayedCards.Add(child.gameObject);
+                    }
                 }
-            }
 
-            foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
-            {
-                if (child.gameObject.tag == "Cards")
+                foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
                 {
-                    EnemyPlayedCards.Add(child.gameObject);
+                    if (child.gameObject.tag == "Cards")
+                    {
+                        EnemyPlayedCards.Add(child.gameObject);
+                    }
                 }
-            }
 
-            if (gameObject.GetComponent<Outline>().effectColor == Color.red)
-            {
-                gameObject.GetComponent<Outline>().effectColor = Color.white;
-                gameObject.GetComponent<Outline>().effectDistance = new Vector2(1,1);
-            }
-            else
-            {
-                gameObject.GetComponent<Outline>().effectColor = Color.red;
-                gameObject.GetComponent<Outline>().effectDistance = new Vector2(10,10);
+                DisplayAttackedCard(1, isAttacking);
+                isAttacking = true;
             }
         }
+        else
+        {
+            gameObject.GetComponent<Outline>().effectColor = Color.red;
+            gameObject.GetComponent<Outline>().effectDistance = new Vector2(1,1);
+            DisplayAttackedCard(1, isAttacking);
+            isAttacking = false;
+        }
     }
+
+    public void DisplayAttackedCard(int amtCards, bool isAttacking)
+    {
+        if (isAttacking != true)
+        {
+            GameObject CopyCard;
+            GameObject zoomCard;
+
+            Display = Instantiate(AttackingDisplay, new Vector2(-100,0), Quaternion.identity);
+            Display.transform.SetParent(Canvas.transform, false);
+
+            Sprite zoomCardSprite;
+            foreach (GameObject card in PlayerPlayedCards)
+            {
+                CopyCard = card.GetComponent<CardZoom>().Card;
+                zoomCardSprite = card.GetComponent<Image>().sprite;
+                CopyCard.GetComponent<Image>().sprite = zoomCardSprite;
+                zoomCard = Instantiate(CopyCard, new Vector2(0, 0), Quaternion.identity);
+                zoomCard.transform.SetParent(Display.transform, false);
+                zoomCard.layer = LayerMask.NameToLayer("Zoom");
+            }
+            Debug.Log(PlayerPlayedCards);       
+        }
+        else
+        {
+            // foreach (Transform child in AttackingDisplay.GetComponentsInChildren<Transform>())
+            // {
+            //     if (child.gameObject.layer == 5)
+            //     {
+            //         Destroy(child.gameObject);
+            //     }
+            // }
+            Destroy(Display);
+            PlayerPlayedCards.Clear();
+            Debug.Log(PlayerPlayedCards);    
+        }
+
+    }
+
 
     // public void StartDrag()
     // {
