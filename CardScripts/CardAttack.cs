@@ -6,18 +6,19 @@ using Mirror;
 
 public class CardAttack : NetworkBehaviour
 {
-    public GameManager GameManager;
-    public GameObject Canvas;
-    public PlayerManager PlayerManager;
-    public RectTransform RectPlayerSlot;
+    private GameManager GameManager;
+    private GameObject Canvas;
+    private PlayerManager PlayerManager;
+    private RectTransform RectPlayerSlot;
 
     List <GameObject> EnemyPlayedCards = new List<GameObject>();
     List <GameObject> PlayerPlayedCards = new List<GameObject>();
 
-    public GameObject EnemySlot;
-    public GameObject PlayerSlot;
+    private GameObject EnemySlot;
+    private GameObject PlayerSlot;
     public GameObject AttackingDisplay;
-    public GameObject Display;
+    public GameObject AttackingCard;
+    private GameObject Display;
 
     private bool isDragging = false;
     private bool isOverDropZone = false;
@@ -93,23 +94,17 @@ public class CardAttack : NetworkBehaviour
     {
         if (isAttacking != true)
         {
-            GameObject CopyCard;
-            GameObject zoomCard;
-
             Display = Instantiate(AttackingDisplay, new Vector2(-100,0), Quaternion.identity);
             Display.transform.SetParent(Canvas.transform, false);
 
-            Sprite zoomCardSprite;
             foreach (GameObject card in PlayerPlayedCards)
-            {
-                CopyCard = card.GetComponent<CardZoom>().Card;
-                zoomCardSprite = card.GetComponent<Image>().sprite;
-                CopyCard.GetComponent<Image>().sprite = zoomCardSprite;
-                zoomCard = Instantiate(CopyCard, new Vector2(0, 0), Quaternion.identity);
+            { 
+                Sprite zoomCardSprite = card.GetComponent<Image>().sprite;
+                AttackingCard.GetComponent<Image>().sprite = zoomCardSprite;
+                GameObject zoomCard = Instantiate(AttackingCard, new Vector2(0, 0), Quaternion.identity);
                 zoomCard.transform.SetParent(Display.transform, false);
                 zoomCard.layer = LayerMask.NameToLayer("Zoom");
             }
-            Debug.Log(PlayerPlayedCards);       
         }
         else
         {
@@ -122,47 +117,6 @@ public class CardAttack : NetworkBehaviour
             // }
             Destroy(Display);
             PlayerPlayedCards.Clear();
-            Debug.Log(PlayerPlayedCards);    
         }
-
     }
-
-
-    // public void StartDrag()
-    // {
-    //     if(!isDraggable)
-    //     {
-    //         return;
-    //     }
-    //     if(transform.parent == RectPlayerSlot)
-    //     {
-    //         PlayerManager.CmdCardAttack(gameObject);
-    //         startPosition = transform.position;
-    //         startParent = transform.parent.gameObject;
-    //         isDragging = true;
-    //     }
-    // }
-
-    // public void EndDrag()
-    // {
-    //     if(!isDraggable)
-    //     {
-    //         return;
-    //     }
-
-    //     isDragging = false;
-    //     if (isOverDropZone && PlayerManager.IsMyTurn )
-    //     {
-    //         transform.SetParent(dropZone.transform, false);
-    //         isDraggable = false;
-    //         // NetworkIdentity networkIdentity = NetworkClient.connection.identity;
-    //         // PlayerManager = networkIdentity.GetComponent<PlayerManager>();
-    //         PlayerManager.PlayCard(gameObject);
-    //     }   
-    //     else
-    //     {
-    //         transform.position = startPosition;
-    //         transform.SetParent(startParent.transform, false);
-    //     }
-    // }
 }
