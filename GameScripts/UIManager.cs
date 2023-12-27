@@ -55,6 +55,7 @@ public class UIManager : NetworkBehaviour
                 {
                     PlayerManager.PlayerSlot.GetComponent<Outline>().effectColor = Color.red;
                     PlayerManager.EnemySlot.GetComponent<Outline>().effectColor = blueColor;
+
                     // if(turnOrder > 1)
                     // {   
                     //     PlayerManager.EnemySlot.GetComponent<Outline>().effectColor = blueColor;

@@ -15,7 +15,7 @@ public class RS_CS : CardAbilities
         PlayerManager.CmdChangeBP(2,1);
     }
 
-    public override void OnAttack()
+    public override void OnSpecial()
     {
         Debug.Log(" ");
     }

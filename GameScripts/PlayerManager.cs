@@ -21,6 +21,10 @@ public class PlayerManager : NetworkBehaviour
     public List <GameObject> EnemySockets = new List<GameObject>();
     public int cardsPlayed = 0;
 
+    public bool AttackBeingMade = false;
+    public GameObject AttackedTarget;
+    public GameObject AttackingTarget;
+
     public GameManager GameManager;
 
     public int CardsPlayed = 0;
@@ -60,8 +64,8 @@ public class PlayerManager : NetworkBehaviour
     [Server]
     public override void OnStartServer()
     {
-        cards.Add(Ping);
-        // cards.Add(UD);
+        // cards.Add(Ping);
+        cards.Add(UD);
         cards.Add(FD);
         // cards.Add(MG);
         // cards.Add(RS);
@@ -82,18 +86,6 @@ public class PlayerManager : NetworkBehaviour
     {
         card.GetComponent<CardAbilities>().OnCompile();
         CmdPlayCard(card);
-    }
-
-    [Command]
-    public void CmdCardAttack(GameObject card)
-    {
-        RpcCardAttack(card);
-    }
-
-    [ClientRpc]
-    void RpcCardAttack(GameObject card)
-    {
-        card.GetComponent<CardAbilities>().OnAttack();
     }
 
     [Command]
@@ -156,7 +148,33 @@ public class PlayerManager : NetworkBehaviour
         pm.IsMyTurn = !pm.IsMyTurn;
         GameManager.EndTurn();
     }
+
+    [Command]
+    public void CmdResetAttackTurns()
+    {
+        RpcResetAttackTurns();
+    }
     
+    [ClientRpc]
+    public void RpcResetAttackTurns()
+    {
+        foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
+        {
+            if (child.gameObject.tag == "Cards")
+            {
+                child.GetComponent<CardDetails>().AttackTurn(true);
+            }
+        }
+
+        foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
+        {
+            if (child.gameObject.tag == "Cards")
+            {
+                child.GetComponent<CardDetails>().AttackTurn(true);
+            }
+        }
+        
+    }
 
     [Command]
     public void CmdGMChangeState(string stateRequest)
@@ -187,29 +205,45 @@ public class PlayerManager : NetworkBehaviour
         GameManager.CardPlayed();
     }
 
-    // [Command]
-    // public void CmdExecute()
-    // {
-    //     RpcExecute();
-    // }
-
-    // [ClientRpc]
-    // void RpcExecute()
-    // {
-    //     for (int i = 0; i < PlayerSockets.Count; i++)
-    //     {
-    //         PlayerSockets[i].transform.GetComponentInChildren<CardAbilities>().OnExecute();
-    //         PlayerSockets[i].transform.GetChild(0).gameObject.transform.SetParent(PlayerYard.transform, false);
-    //         EnemySockets[i].transform.GetChild(0).gameObject.transform.SetParent(EnemyYard.transform, false);
-    //     }
-    // }
-
-
-
-
-
-
     //CARD ABILITIES
+    [Command]
+    public void CmdCardAttack()
+    {
+        RpcCardAttack();
+    }
+
+    [ClientRpc]
+    public void RpcCardAttack()
+    {
+        int AttackDamage;
+        int EnemyHealth;
+
+        AttackDamage = AttackingTarget.GetComponent<CardDetails>().GetCardAttack();
+        EnemyHealth = AttackedTarget.GetComponent<CardDetails>().GetCardHealth();
+
+        EnemyHealth -= AttackDamage;
+        Debug.Log("Enemy Health: " + EnemyHealth);
+        AttackedTarget.GetComponent<CardDetails>().SetCardHealth(EnemyHealth);
+        if(EnemyHealth < 1)
+        {
+            AttackedTarget.GetComponent<CardDetails>().DestroySelf();
+        }
+
+        AttackingTarget.GetComponent<CardDetails>().AttackTurn(false);
+    }
+
+    [Command]
+    public void CmdCardSpecial(GameObject card)
+    {
+        RpcCardSpecial(card);
+    }
+
+    [ClientRpc]
+    void RpcCardSpecial(GameObject card)
+    {
+        // card.GetComponent<CardAbilities>().OnSpec();
+    }
+
     [Command]
     public void CmdGMChangeVariables(int variables)
     {

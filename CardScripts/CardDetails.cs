@@ -7,6 +7,7 @@ public class CardDetails : NetworkBehaviour
 {
     public int CardHealth = 1;
     public int CardAttack = 1;
+    public bool CanAttack = true;
 
     public int GetCardHealth()
     {
@@ -15,7 +16,33 @@ public class CardDetails : NetworkBehaviour
 
     public void SetCardHealth(int DamageDone)
     {
-        CardHealth += DamageDone;
+        CardHealth -= DamageDone;
+        DestroySelf();
+    }
+
+    public int GetCardAttack()
+    {
+        return CardAttack;
+    }
+
+    public void DestroySelf()
+    {
+        if (CardHealth < 1)
+        {
+            Destroy(gameObject);
+            Debug.Log("Card Destroyed");
+        }
+        
+    }
+
+    public bool IsAbleToAttack()
+    {
+        return CanAttack;
+    }
+
+    public void AttackTurn(bool HasAttackedThisTurn)
+    {
+        CanAttack = HasAttackedThisTurn;
     }
 
 }

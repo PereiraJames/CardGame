@@ -14,20 +14,11 @@ public class CardAttack : NetworkBehaviour
     List <GameObject> EnemyPlayedCards = new List<GameObject>();
     List <GameObject> PlayerPlayedCards = new List<GameObject>();
 
-    private GameObject EnemySlot;
-    private GameObject PlayerSlot;
+    public GameObject EnemySlot;
+    public GameObject PlayerSlot;
     public GameObject AttackingDisplay;
     public GameObject AttackingCard;
-    private GameObject Display;
-
-    private bool isDragging = false;
-    private bool isOverDropZone = false;
-    private bool isDraggable = true;
-    private bool isAttacking = false;
-
-    private GameObject dropZone;
-    private GameObject startParent;
-    private Vector2 startPosition;
+    public GameObject Display;
 
     private void Start()
     {
@@ -38,85 +29,96 @@ public class CardAttack : NetworkBehaviour
         Canvas = GameObject.Find("Main Canvas");
         NetworkIdentity networkIdentity = NetworkClient.connection.identity;
         PlayerManager = networkIdentity.GetComponent<PlayerManager>();
-        if (!isOwned)
-        {
-            isDraggable = false;
-        }
     }
 
-    void Update()
+    public void AttackTarget()
     {
-        if(isDragging)
+        if (PlayerManager.IsMyTurn && isOwned && gameObject.GetComponent<CardDetails>().IsAbleToAttack()) //Must be on players turn, player must have authourity of card and the card must be able to attack
         {
-            transform.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-            transform.SetParent(Canvas.transform, true);
-        }
-    }
-
-    public void OnClicked()
-    {
-        if (!isAttacking)
-        {   
-            gameObject.GetComponent<Outline>().effectColor = Color.white;
-            gameObject.GetComponent<Outline>().effectDistance = new Vector2(10,10);
-            if(transform.parent == RectPlayerSlot)
-            {               
-                foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
-                {
-                    if (child.gameObject.tag == "Cards")
+            if (!PlayerManager.AttackBeingMade) //checks if attack is currently being made
+            {   
+                gameObject.GetComponent<Outline>().effectColor = Color.white;
+                gameObject.GetComponent<Outline>().effectDistance = new Vector2(10,10);
+                if(transform.parent == RectPlayerSlot) //This checks if card is in the PlayerSlot
+                {               
+                    foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
                     {
-                        PlayerPlayedCards.Add(child.gameObject);
+                        if (child.gameObject.tag == "Cards")
+                        {
+                            PlayerPlayedCards.Add(child.gameObject);
+                        }
                     }
-                }
 
-                foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
-                {
-                    if (child.gameObject.tag == "Cards")
+                    foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
                     {
-                        EnemyPlayedCards.Add(child.gameObject);
+                        if (child.gameObject.tag == "Cards")
+                        {
+                            EnemyPlayedCards.Add(child.gameObject);
+                        }
                     }
+                    PlayerManager.AttackingTarget = gameObject;
+                    AttackDisplay(1);
+                    PlayerManager.AttackBeingMade = true;
                 }
-
-                DisplayAttackedCard(1, isAttacking);
-                isAttacking = true;
+            }
+            else
+            {
+                gameObject.GetComponent<Outline>().effectColor = Color.red;
+                gameObject.GetComponent<Outline>().effectDistance = new Vector2(1,1);
+                AttackDisplay(0);
+                PlayerManager.AttackBeingMade = false;
             }
         }
         else
         {
-            gameObject.GetComponent<Outline>().effectColor = Color.red;
-            gameObject.GetComponent<Outline>().effectDistance = new Vector2(1,1);
-            DisplayAttackedCard(1, isAttacking);
-            isAttacking = false;
+            AttackDisplay(0);
         }
     }
 
-    public void DisplayAttackedCard(int amtCards, bool isAttacking)
+    public void AttackDisplay(int state)
     {
-        if (isAttacking != true)
+        if (!PlayerManager.AttackBeingMade && state == 1)
         {
-            Display = Instantiate(AttackingDisplay, new Vector2(-100,0), Quaternion.identity);
+            Debug.Log("22");
+            Display = Instantiate(AttackingDisplay, new Vector2(-177,177), Quaternion.identity);
             Display.transform.SetParent(Canvas.transform, false);
-
-            foreach (GameObject card in PlayerPlayedCards)
-            { 
-                Sprite zoomCardSprite = card.GetComponent<Image>().sprite;
-                AttackingCard.GetComponent<Image>().sprite = zoomCardSprite;
-                GameObject zoomCard = Instantiate(AttackingCard, new Vector2(0, 0), Quaternion.identity);
-                zoomCard.transform.SetParent(Display.transform, false);
-                zoomCard.layer = LayerMask.NameToLayer("Zoom");
+            Debug.Log(Display);
+            foreach (GameObject card in EnemyPlayedCards)
+            {
+                card.GetComponent<RectTransform>().sizeDelta = new Vector2(200,280);
+                card.transform.SetParent(Display.transform, false);
             }
         }
-        else
+        else if (state == 0)
         {
-            // foreach (Transform child in AttackingDisplay.GetComponentsInChildren<Transform>())
-            // {
-            //     if (child.gameObject.layer == 5)
-            //     {
-            //         Destroy(child.gameObject);
-            //     }
-            // }
+            foreach (GameObject card in EnemyPlayedCards)
+            { 
+                card.transform.SetParent(EnemySlot.transform, false);
+            }
             Destroy(Display);
-            PlayerPlayedCards.Clear();
+            EnemyPlayedCards.Clear();
+            Debug.Log("ClosedDisplay");
+        }
+    }
+
+    public void SelectedTarget()
+    {
+        if(PlayerManager.AttackBeingMade)
+        {
+            if(gameObject != PlayerManager.AttackingTarget)
+            {
+                PlayerManager.AttackedTarget = gameObject; 
+                Debug.Log("SelectedTarget: " + PlayerManager.AttackedTarget);
+            }
+        }
+
+        if(PlayerManager.AttackedTarget != null && PlayerManager.AttackBeingMade && gameObject.GetComponent<CardDetails>().IsAbleToAttack())
+        {
+            if(PlayerManager.IsMyTurn)
+            {
+                PlayerManager.CmdCardAttack();
+                AttackDisplay(0);
+            }
         }
     }
 }
