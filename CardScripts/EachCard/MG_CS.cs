@@ -5,9 +5,6 @@ using Mirror;
 
 public class MG_CS : CardAbilities
 {
-    int cardHealth = 1;
-    int cardAttack = 1;
-
     public override void OnCompile()
     {
         PlayerManager.CmdGMEnemyHealth(-10);
@@ -20,6 +17,6 @@ public class MG_CS : CardAbilities
 
     public override void OnSpecial()
     {
-        // target.Health -= cardAttack;   
+        Debug.Log(" ");
     }
 }

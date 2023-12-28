@@ -92,7 +92,5 @@ public class UIManager : NetworkBehaviour
                     // }
                 }
             }
-            
-        
     }
 }
