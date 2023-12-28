@@ -22,7 +22,10 @@ public class PlayerManager : NetworkBehaviour
     public int cardsPlayed = 0;
 
     public bool AttackBeingMade = false;
+
+    [SyncVar]
     public GameObject AttackedTarget;
+    [SyncVar]
     public GameObject AttackingTarget;
 
     public GameManager GameManager;
@@ -207,6 +210,29 @@ public class PlayerManager : NetworkBehaviour
 
     //CARD ABILITIES
     [Command]
+    public void CmdAttackingDetails(GameObject target, int targetNum)
+    {
+        RpcAttackingDetails(target, targetNum);
+    }
+
+    [ClientRpc]
+    public void RpcAttackingDetails(GameObject target, int targetNum)
+    {
+        if(targetNum == 1)
+        {
+            AttackedTarget = target;
+            Debug.Log("Attacked Target: " + AttackedTarget);
+        }
+        else if(targetNum == 0)
+        {
+            AttackingTarget = target;
+            Debug.Log("Attacking Target: " + AttackingTarget);
+        }
+
+        AttackingTarget.GetComponent<CardAttack>().DealAttack();
+    }
+
+    [Command]
     public void CmdCardAttack()
     {
         RpcCardAttack();
@@ -226,10 +252,12 @@ public class PlayerManager : NetworkBehaviour
         AttackedTarget.GetComponent<CardDetails>().SetCardHealth(EnemyHealth);
         if(EnemyHealth < 1)
         {
-            AttackedTarget.GetComponent<CardDetails>().DestroySelf();
+            Destroy(AttackedTarget);
         }
 
         AttackingTarget.GetComponent<CardDetails>().AttackTurn(false);
+        AttackingTarget = null;
+        AttackedTarget = null;
     }
 
     [Command]

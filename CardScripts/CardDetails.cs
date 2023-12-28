@@ -17,22 +17,11 @@ public class CardDetails : NetworkBehaviour
     public void SetCardHealth(int DamageDone)
     {
         CardHealth -= DamageDone;
-        DestroySelf();
     }
 
     public int GetCardAttack()
     {
         return CardAttack;
-    }
-
-    public void DestroySelf()
-    {
-        if (CardHealth < 1)
-        {
-            Destroy(gameObject);
-            Debug.Log("Card Destroyed");
-        }
-        
     }
 
     public bool IsAbleToAttack()

@@ -18,10 +18,10 @@ public class CardAttack : NetworkBehaviour
     public GameObject PlayerSlot;
     public GameObject AttackingDisplay;
     public GameObject AttackingCard;
-    public GameObject Display;
 
     private void Start()
     {
+        AttackingDisplay = GameObject.Find("AttackingDisplay");
         PlayerSlot = GameObject.Find("PlayerSlot");
         EnemySlot = GameObject.Find("EnemySlot");
         RectPlayerSlot = PlayerSlot.GetComponent<RectTransform>();
@@ -56,7 +56,7 @@ public class CardAttack : NetworkBehaviour
                             EnemyPlayedCards.Add(child.gameObject);
                         }
                     }
-                    PlayerManager.AttackingTarget = gameObject;
+                    PlayerManager.CmdAttackingDetails(gameObject, 0);
                     AttackDisplay(1);
                     PlayerManager.AttackBeingMade = true;
                 }
@@ -69,7 +69,7 @@ public class CardAttack : NetworkBehaviour
                 PlayerManager.AttackBeingMade = false;
             }
         }
-        else
+        else if(PlayerManager.IsMyTurn)
         {
             AttackDisplay(0);
         }
@@ -79,14 +79,11 @@ public class CardAttack : NetworkBehaviour
     {
         if (!PlayerManager.AttackBeingMade && state == 1)
         {
-            Debug.Log("22");
-            Display = Instantiate(AttackingDisplay, new Vector2(-177,177), Quaternion.identity);
-            Display.transform.SetParent(Canvas.transform, false);
-            Debug.Log(Display);
+            Debug.Log("OpenedDisplay");
             foreach (GameObject card in EnemyPlayedCards)
             {
-                card.GetComponent<RectTransform>().sizeDelta = new Vector2(200,280);
-                card.transform.SetParent(Display.transform, false);
+                // card.GetComponent<RectTransform>().sizeDelta = new Vector2(200,280);
+                card.transform.SetParent(AttackingDisplay.transform, false);
             }
         }
         else if (state == 0)
@@ -95,7 +92,6 @@ public class CardAttack : NetworkBehaviour
             { 
                 card.transform.SetParent(EnemySlot.transform, false);
             }
-            Destroy(Display);
             EnemyPlayedCards.Clear();
             Debug.Log("ClosedDisplay");
         }
@@ -103,15 +99,18 @@ public class CardAttack : NetworkBehaviour
 
     public void SelectedTarget()
     {
-        if(PlayerManager.AttackBeingMade)
+        if(PlayerManager.AttackBeingMade && PlayerManager.AttackingTarget != null && !isOwned)
         {
             if(gameObject != PlayerManager.AttackingTarget)
             {
-                PlayerManager.AttackedTarget = gameObject; 
+                PlayerManager.CmdAttackingDetails(gameObject, 1); 
                 Debug.Log("SelectedTarget: " + PlayerManager.AttackedTarget);
             }
         }
+    }
 
+    public void DealAttack()
+    {
         if(PlayerManager.AttackedTarget != null && PlayerManager.AttackBeingMade && gameObject.GetComponent<CardDetails>().IsAbleToAttack())
         {
             if(PlayerManager.IsMyTurn)
