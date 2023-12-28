@@ -8,10 +8,10 @@ public class GameManager : NetworkBehaviour
     public UIManager UIManager;
     public int TurnOrder = 0;
     public string GameState = "Ready";
-    public int PlayerHealth = 40;
-    public int EnemyHealth = 40;
+    public int PlayerHealth = 20;
+    public int EnemyHealth = 20;
     public int PlayerVariables = 0;
-    public int EnemyVariables = 0;
+    public int EnemyVariables = 0;   
 
     private int ReadyClicks = 0;
 
@@ -62,26 +62,31 @@ public class GameManager : NetworkBehaviour
         Debug.Log("Enemy" + EnemyHealth);
         TurnOrder++;
         UIManager.HighlightTurn(TurnOrder);
+
         if(isOwned)
         {
             if (PlayerHealth <= 0)
             {
-                Debug.Log("PLAYER2 WINS!");
+                Debug.Log("They WINS!");
+                UIManager.DisplayWin(false);
             }
             else if(EnemyHealth <= 0)
             {
-                Debug.Log("PLAYER1 Wins!");
+                Debug.Log("You Wins!");
+                UIManager.DisplayWin(true);
             }
         }
         else if (!isOwned)
         {
             if (PlayerHealth <= 0)
             {
-                Debug.Log("PLAYER2 WINS!");
+                Debug.Log("They WINS!");
+                UIManager.DisplayWin(false);
             }
             else if(EnemyHealth <= 0)
             {
-                Debug.Log("PLAYER1 Wins!");
+                Debug.Log("You Wins!");
+                UIManager.DisplayWin(true);
             }
         }
 

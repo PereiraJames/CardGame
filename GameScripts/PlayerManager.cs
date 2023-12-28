@@ -10,6 +10,7 @@ public class PlayerManager : NetworkBehaviour
     public GameObject FD;
     public GameObject RS;
     public GameObject MG;
+    public GameObject WinText;
 
     public GameObject PlayerArea;
     public GameObject EnemyArea;
@@ -43,6 +44,8 @@ public class PlayerManager : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
+
+        // WinText = GameObject.Find("WinText");
 
         GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
@@ -306,6 +309,7 @@ public class PlayerManager : NetworkBehaviour
     public void RpcGMPlayerHealth(int health)
     {
         GameManager.AdjustPlayerHealth(health, isOwned);
+        Debug.Log(GameManager.PlayerHealth);
     }
 
     [Command]
@@ -318,5 +322,6 @@ public class PlayerManager : NetworkBehaviour
     public void RpcGMPEnemyHealth(int health)
     {
         GameManager.AdjustEnemyHealth(health, isOwned);
+        Debug.Log(GameManager.EnemyHealth);
     }
 }

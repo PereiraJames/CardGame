@@ -14,13 +14,32 @@ public class UIManager : NetworkBehaviour
     public GameObject currentSelectedCard;
     public bool isCardSelected;
 
+    public GameObject Canvas;
+    public GameObject WinDisplay;
+
+
     Color blueColor = new Color32(17, 216, 238, 255);
 
     void Start()
     {
+        Canvas = GameObject.Find("Main Canvas");
         GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
+    public void DisplayWin(bool Win)
+    {
+        GameObject Display = Instantiate(WinDisplay, new Vector2(0, 0), Quaternion.identity);
+        Display.transform.SetParent(Canvas.transform, false);
+
+        if (Win)
+        {
+            Display.GetComponent<Text>().text = "You Win!";
+        }
+        else
+        {
+            Display.GetComponent<Text>().text = "They Win!";
+        }
+    }
     public void UpdatePlayerText()
     {
         PlayerText.GetComponent<Text>().text = "Player Health: " + GameManager.PlayerHealth + "\nPlayer Variables: " + GameManager.PlayerVariables;
