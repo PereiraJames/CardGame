@@ -7,8 +7,6 @@ public abstract class CardAbilities : NetworkBehaviour
 {
     public PlayerManager PlayerManager;
 
-    public int AttacksOnTurn = 1;
-
     void Start()
     {
         NetworkIdentity networkIdentity = NetworkClient.connection.identity;

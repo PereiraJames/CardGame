@@ -37,8 +37,6 @@ public class CardAttack : NetworkBehaviour
         {
             if (!PlayerManager.AttackBeingMade) //checks if attack is currently being made
             {   
-                gameObject.GetComponent<Outline>().effectColor = Color.white;
-                gameObject.GetComponent<Outline>().effectDistance = new Vector2(10,10);
                 if(transform.parent == RectPlayerSlot) //This checks if card is in the PlayerSlot
                 {               
                     foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
@@ -63,8 +61,6 @@ public class CardAttack : NetworkBehaviour
             }
             else
             {
-                gameObject.GetComponent<Outline>().effectColor = Color.red;
-                gameObject.GetComponent<Outline>().effectDistance = new Vector2(1,1);
                 AttackDisplay(0);
                 PlayerManager.AttackBeingMade = false;
             }

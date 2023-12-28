@@ -11,6 +11,8 @@ public class UIManager : NetworkBehaviour
     public GameObject Button;
     public GameObject PlayerText;
     public GameObject EnemyText;
+    public GameObject currentSelectedCard;
+    public bool isCardSelected;
 
     Color blueColor = new Color32(17, 216, 238, 255);
 

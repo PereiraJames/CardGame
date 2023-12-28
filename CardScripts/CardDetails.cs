@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Mirror;
 
 public class CardDetails : NetworkBehaviour
@@ -8,6 +9,13 @@ public class CardDetails : NetworkBehaviour
     public int CardHealth = 1;
     public int CardAttack = 1;
     public bool CanAttack = true;
+
+    public GameObject CardStats;
+
+    void Start()
+    {
+        UpdateCardText();
+    }
 
     public int GetCardHealth()
     {
@@ -32,6 +40,11 @@ public class CardDetails : NetworkBehaviour
     public void AttackTurn(bool HasAttackedThisTurn)
     {
         CanAttack = HasAttackedThisTurn;
+    }
+
+    public void UpdateCardText()
+    {
+        gameObject.GetComponentInChildren<Text>().text = CardAttack + " / " + CardHealth;
     }
 
 }

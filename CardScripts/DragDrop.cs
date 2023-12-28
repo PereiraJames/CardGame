@@ -10,7 +10,7 @@ public class DragDrop : NetworkBehaviour
     public PlayerManager PlayerManager;
     public RectTransform PlayerSlot;
 
-    private bool isDragging = false;
+    public bool isDragging = false;
     private bool isOverDropZone = false;
     private bool isDraggable = true;
     private GameObject dropZone;

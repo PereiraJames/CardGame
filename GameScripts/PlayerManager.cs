@@ -254,7 +254,7 @@ public class PlayerManager : NetworkBehaviour
         {
             Destroy(AttackedTarget);
         }
-
+        AttackedTarget.GetComponent<CardDetails>().UpdateCardText();
         AttackingTarget.GetComponent<CardDetails>().AttackTurn(false);
         AttackingTarget = null;
         AttackedTarget = null;
