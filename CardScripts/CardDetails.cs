@@ -8,7 +8,7 @@ public class CardDetails : NetworkBehaviour
 {
     public int CardHealth = 1;
     public int CardAttack = 1;
-    public bool CanAttack = true;
+    public bool CanAttack = false;
 
     public GameObject CardStats;
 

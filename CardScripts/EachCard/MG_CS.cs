@@ -7,7 +7,7 @@ public class MG_CS : CardAbilities
 {
     public override void OnCompile()
     {
-        PlayerManager.CmdGMEnemyHealth(-10);
+        PlayerManager.CmdGMEnemyHealth(-1);
     }
 
     public override void OnExecute()
