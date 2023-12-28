@@ -5,11 +5,11 @@ using Mirror;
 
 public class PlayerManager : NetworkBehaviour
 {
-    public GameObject Ping;
-    public GameObject UD;
-    public GameObject FD;
-    public GameObject RS;
-    public GameObject MG;
+    // public GameObject Ping;
+    // public GameObject UD;
+    // public GameObject FD;
+    // public GameObject RS;
+    // public GameObject MG;
     public GameObject WinText;
 
     public GameObject PlayerArea;
@@ -24,8 +24,11 @@ public class PlayerManager : NetworkBehaviour
 
     public bool AttackBeingMade = false;
 
+    public NetworkManager NetworkManager;
+
     [SyncVar]
     public GameObject AttackedTarget;
+
     [SyncVar]
     public GameObject AttackingTarget;
 
@@ -45,7 +48,7 @@ public class PlayerManager : NetworkBehaviour
     {
         base.OnStartClient();
 
-        // WinText = GameObject.Find("WinText");
+        NetworkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
 
         GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
@@ -61,6 +64,14 @@ public class PlayerManager : NetworkBehaviour
         PlayerSockets.Add(PlayerSlot);
         EnemySockets.Add(EnemySlot);
 
+        foreach (GameObject tests in NetworkManager.spawnPrefabs) //Auto puts prefabs into a list(or a deck)
+        {
+            if(tests.tag == "Cards")
+            {
+                cards.Add(tests);
+            }
+        }
+
         if(isClientOnly)
         {
             IsMyTurn = true;
@@ -71,8 +82,8 @@ public class PlayerManager : NetworkBehaviour
     public override void OnStartServer()
     {
         // cards.Add(Ping);
-        cards.Add(UD);
-        cards.Add(FD);
+        // cards.Add(UD);
+        // cards.Add(FD);
         // cards.Add(MG);
         // cards.Add(RS);
     }
