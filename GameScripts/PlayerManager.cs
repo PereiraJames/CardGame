@@ -287,15 +287,15 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdGMChangeVariables(int variables)
+    public void CmdStealDbl(int amount)
     {
-        RpcGMChangeVariables(variables);
+        RpcStealDbl(amount);
     }
 
     [ClientRpc]
-    public void RpcGMChangeVariables(int variables)
+    public void RpcStealDbl(int variables)
     {
-        GameManager.ChangeVariables(variables, isOwned);
+        GameManager.UpdateDoubloons(variables, isOwned);
     }
 
     [Command]
@@ -333,6 +333,5 @@ public class PlayerManager : NetworkBehaviour
     public void RpcGMPEnemyHealth(int health)
     {
         GameManager.AdjustEnemyHealth(health, isOwned);
-        Debug.Log(GameManager.EnemyHealth);
     }
 }

@@ -11,12 +11,12 @@ public class UIManager : NetworkBehaviour
     public GameObject Button;
     public GameObject PlayerText;
     public GameObject EnemyText;
+    public GameObject DoubloonText;
     public GameObject currentSelectedCard;
     public bool isCardSelected;
 
     public GameObject Canvas;
     public GameObject WinDisplay;
-
 
     Color blueColor = new Color32(17, 216, 238, 255);
 
@@ -24,6 +24,7 @@ public class UIManager : NetworkBehaviour
     {
         Canvas = GameObject.Find("Main Canvas");
         GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        UpdatePlayerText();
     }
 
     public void DisplayWin(bool Win)
@@ -42,8 +43,9 @@ public class UIManager : NetworkBehaviour
     }
     public void UpdatePlayerText()
     {
-        PlayerText.GetComponent<Text>().text = "Player Health: " + GameManager.PlayerHealth + "\nPlayer Variables: " + GameManager.PlayerVariables;
-        EnemyText.GetComponent<Text>().text = "Enemy Health: " + GameManager.EnemyHealth + "\nEnemy Variables: " + GameManager.EnemyVariables;
+        PlayerText.GetComponent<Text>().text = "Player Health: " + GameManager.PlayerHealth + "\nPlayer Doubloons: " + GameManager.PlayerDoubloons;
+        EnemyText.GetComponent<Text>().text = "Enemy Health: " + GameManager.EnemyHealth + "\nEnemy Doubloons: " + GameManager.EnemyDoubloons;
+        DoubloonText.GetComponent<Text>().text = "Doubloon Count: " + GameManager.TotalDoubloons;
     }
 
     public void UpdateButtonText(string gameState)

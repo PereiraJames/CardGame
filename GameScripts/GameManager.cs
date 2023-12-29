@@ -10,8 +10,9 @@ public class GameManager : NetworkBehaviour
     public string GameState = "Ready";
     public int PlayerHealth = 20;
     public int EnemyHealth = 20;
-    public int PlayerVariables = 0;
-    public int EnemyVariables = 0;   
+    public int PlayerDoubloons = 2;
+    public int EnemyDoubloons = 2;   
+    public int TotalDoubloons = 40;
 
     private int ReadyClicks = 0;
 
@@ -58,8 +59,6 @@ public class GameManager : NetworkBehaviour
 
     public void CardPlayed()
     {
-        Debug.Log("Player: " + PlayerHealth);
-        Debug.Log("Enemy" + EnemyHealth);
         TurnOrder++;
         UIManager.HighlightTurn(TurnOrder);
 
@@ -67,7 +66,6 @@ public class GameManager : NetworkBehaviour
         {
             if (PlayerHealth <= 0)
             {
-                Debug.Log("They WINS!");
                 UIManager.DisplayWin(false);
             }
             else if(EnemyHealth <= 0)
@@ -118,15 +116,27 @@ public class GameManager : NetworkBehaviour
         UIManager.UpdatePlayerText();
     }
 
-    public void ChangeVariables(int variables, bool isOwned)
+    public void UpdateDoubloons(int amount, bool isOwned)
     {
+        if (TotalDoubloons < 1)
+        {
+            return;
+        }
+
+        if(amount >= TotalDoubloons)
+        {
+            amount = TotalDoubloons;
+        }
+
         if(isOwned)
         {
-            PlayerVariables += variables;
+            PlayerDoubloons += amount;
+            TotalDoubloons -= amount;
         }
         else
         {
-            EnemyVariables += variables;
+            EnemyDoubloons += amount;
+            TotalDoubloons -= amount;
         }
         UIManager.UpdatePlayerText();
     }
