@@ -16,6 +16,10 @@ public class PlayerManager : NetworkBehaviour
     public GameObject EnemyArea;
     public GameObject PlayerSlot;
     public GameObject EnemySlot;
+
+    public GameObject PlayerImage;
+    public GameObject EnemyImage;
+
     public GameObject PlayerYard;
     public GameObject EnemyYard;
     public List <GameObject> PlayerSockets = new List<GameObject>();
@@ -60,6 +64,9 @@ public class PlayerManager : NetworkBehaviour
 
         PlayerSlot = GameObject.Find("PlayerSlot");
         EnemySlot = GameObject.Find("EnemySlot");
+
+        PlayerImage = GameObject.Find("PlayerImage");
+        EnemyImage = GameObject.Find("EnemyImage");
 
         PlayerSockets.Add(PlayerSlot);
         EnemySockets.Add(EnemySlot);
@@ -273,6 +280,7 @@ public class PlayerManager : NetworkBehaviour
         AttackedTarget.GetComponent<CardDetails>().SetCardHealth(EnemyHealth);
         if(EnemyHealth < 1)
         {
+            AttackedTarget.GetComponent<CardZoom>().OnHoverExit();
             Destroy(AttackedTarget);
         }
         AttackedTarget.GetComponent<CardDetails>().UpdateCardText();

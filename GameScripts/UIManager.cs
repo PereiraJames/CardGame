@@ -9,8 +9,10 @@ public class UIManager : NetworkBehaviour
     public PlayerManager PlayerManager;
     public GameManager GameManager;
     public GameObject Button;
-    public GameObject PlayerText;
-    public GameObject EnemyText;
+    public GameObject PlayerHealthText;
+    public GameObject EnemyHealthText;
+    public GameObject EnemyDblText;
+    public GameObject PlayerDblText;
     public GameObject DoubloonText;
     public GameObject currentSelectedCard;
     public bool isCardSelected;
@@ -43,9 +45,12 @@ public class UIManager : NetworkBehaviour
     }
     public void UpdatePlayerText()
     {
-        PlayerText.GetComponent<Text>().text = "Player Health: " + GameManager.PlayerHealth + "\nPlayer Doubloons: " + GameManager.currentPlayerDoubloons + "/" + GameManager.totalPlayerDoubloons;
-        EnemyText.GetComponent<Text>().text = "Enemy Health: " + GameManager.EnemyHealth + "\nEnemy Doubloons: " + GameManager.currentEnemyDoubloons + "/" + GameManager.totalEnemyDoubloons;
-        DoubloonText.GetComponent<Text>().text = "Doubloon Count: " + GameManager.TotalDoubloons;
+        PlayerHealthText.GetComponent<Text>().text = GameManager.PlayerHealth.ToString();
+        EnemyHealthText.GetComponent<Text>().text = GameManager.EnemyHealth.ToString();
+        PlayerDblText.GetComponent<Text>().text =  GameManager.currentPlayerDoubloons + "/" + GameManager.totalPlayerDoubloons;
+        EnemyDblText.GetComponent<Text>().text = GameManager.currentEnemyDoubloons + "/" + GameManager.totalEnemyDoubloons;
+
+        DoubloonText.GetComponent<Text>().text = GameManager.TotalDoubloons.ToString();
     }
 
     public void UpdateButtonText(string gameState)
@@ -62,22 +67,24 @@ public class UIManager : NetworkBehaviour
             {
                 if (PlayerManager.IsMyTurn)
                 {
-                    PlayerManager.PlayerSlot.GetComponent<Outline>().effectColor = Color.red;
-                    PlayerManager.EnemySlot.GetComponent<Outline>().effectColor = blueColor;
-
+                    PlayerManager.PlayerImage.GetComponent<Image>().color = Color.white;
+                    PlayerManager.EnemyImage.GetComponent<Image>().color = Color.red;
+                    Button.GetComponentInChildren<Text>().color = Color.white;
                 }
                 else
                 {
-                    PlayerManager.EnemySlot.GetComponent<Outline>().effectColor = Color.red;
-                    PlayerManager.PlayerSlot.GetComponent<Outline>().effectColor = blueColor;
+                    PlayerManager.EnemyImage.GetComponent<Image>().color = Color.white;
+                    PlayerManager.PlayerImage.GetComponent<Image>().color = Color.red;
+                    Button.GetComponentInChildren<Text>().color = Color.gray;
                 }
             }
             else if (turnOrder > 0)
             {
                 if(PlayerManager.IsMyTurn)
                 {
-                    PlayerManager.PlayerSlot.GetComponent<Outline>().effectColor = Color.red;
-                    PlayerManager.EnemySlot.GetComponent<Outline>().effectColor = blueColor;
+                    PlayerManager.PlayerImage.GetComponent<Image>().color = Color.white;
+                    PlayerManager.EnemyImage.GetComponent<Image>().color = Color.red;
+                    Button.GetComponentInChildren<Text>().color = Color.white;
 
                     // if(turnOrder > 1)
                     // {   
@@ -86,8 +93,9 @@ public class UIManager : NetworkBehaviour
                 }
                 else
                 {
-                    PlayerManager.EnemySlot.GetComponent<Outline>().effectColor = Color.red;
-                    PlayerManager.PlayerSlot.GetComponent<Outline>().effectColor = blueColor;
+                    PlayerManager.EnemyImage.GetComponent<Image>().color = Color.white;
+                    PlayerManager.PlayerImage.GetComponent<Image>().color = Color.red;
+                    Button.GetComponentInChildren<Text>().color = Color.gray;
                     // if (turnOrder > 1)
                     // {
                     //     PlayerManager.PlayerSlot.GetComponent<Outline>().effectColor = blueColor;

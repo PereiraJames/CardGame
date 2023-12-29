@@ -35,6 +35,7 @@ public class CardAttack : NetworkBehaviour
     {
         if (PlayerManager.IsMyTurn && isOwned && gameObject.GetComponent<CardDetails>().IsAbleToAttack()) //Must be on players turn, player must have authourity of card and the card must be able to attack
         {
+            Debug.Log("1");
             if (!PlayerManager.AttackBeingMade) //checks if attack is currently being made
             {   
                 if(transform.parent == RectPlayerSlot) //This checks if card is in the PlayerSlot
@@ -55,6 +56,7 @@ public class CardAttack : NetworkBehaviour
                         }
                     }
                     PlayerManager.CmdAttackingDetails(gameObject, 0);
+                    Debug.Log("2");
                     AttackDisplay(1);
                     PlayerManager.AttackBeingMade = true;
                 }
@@ -67,6 +69,8 @@ public class CardAttack : NetworkBehaviour
         }
         else if(PlayerManager.IsMyTurn)
         {
+            Debug.Log("4");
+            Debug.Log("1) " + PlayerManager.IsMyTurn + " 2) " + isOwned + " 3) " + gameObject.GetComponent<CardDetails>().IsAbleToAttack());
             AttackDisplay(0);
         }
     }

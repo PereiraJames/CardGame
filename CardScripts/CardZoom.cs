@@ -20,6 +20,9 @@ public class CardZoom : MonoBehaviour
     {
         zoomCardSprite = gameObject.GetComponent<Image>().sprite;
         Card.GetComponent<Image>().sprite = zoomCardSprite;
+        int CardHealth = gameObject.GetComponent<CardDetails>().GetCardHealth();
+        int CardAttack = gameObject.GetComponent<CardDetails>().GetCardAttack();
+        Card.GetComponentInChildren<Text>().text = CardAttack + " / " + CardHealth;
         zoomCard = Instantiate(Card, new Vector2(744, 0), Quaternion.identity);
         zoomCard.transform.SetParent(Canvas.transform, false);
         zoomCard.layer = LayerMask.NameToLayer("Zoom");
