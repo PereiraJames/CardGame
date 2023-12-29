@@ -9,6 +9,7 @@ public class CardDetails : NetworkBehaviour
     public int CardHealth = 1;
     public int CardAttack = 1;
     public bool CanAttack = false;
+    public int DoubloonCost = 1;
 
     public GameObject CardStats;
 

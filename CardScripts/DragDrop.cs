@@ -78,8 +78,11 @@ public class DragDrop : NetworkBehaviour
         }
 
         isDragging = false;
-        if (isOverDropZone && PlayerManager.IsMyTurn )
+        int cardCost = gameObject.GetComponent<CardDetails>().DoubloonCost;
+        int currentPlayerDoubloons = GameManager.currentPlayerDoubloons;
+        if (isOverDropZone && PlayerManager.IsMyTurn && cardCost <= currentPlayerDoubloons)
         {
+            PlayerManager.CmdUpdateDoubloons(cardCost,false);
             transform.SetParent(dropZone.transform, false);
             isDraggable = false;
             // NetworkIdentity networkIdentity = NetworkClient.connection.identity;

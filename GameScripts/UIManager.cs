@@ -43,8 +43,8 @@ public class UIManager : NetworkBehaviour
     }
     public void UpdatePlayerText()
     {
-        PlayerText.GetComponent<Text>().text = "Player Health: " + GameManager.PlayerHealth + "\nPlayer Doubloons: " + GameManager.PlayerDoubloons;
-        EnemyText.GetComponent<Text>().text = "Enemy Health: " + GameManager.EnemyHealth + "\nEnemy Doubloons: " + GameManager.EnemyDoubloons;
+        PlayerText.GetComponent<Text>().text = "Player Health: " + GameManager.PlayerHealth + "\nPlayer Doubloons: " + GameManager.currentPlayerDoubloons + "/" + GameManager.totalPlayerDoubloons;
+        EnemyText.GetComponent<Text>().text = "Enemy Health: " + GameManager.EnemyHealth + "\nEnemy Doubloons: " + GameManager.currentEnemyDoubloons + "/" + GameManager.totalEnemyDoubloons;
         DoubloonText.GetComponent<Text>().text = "Doubloon Count: " + GameManager.TotalDoubloons;
     }
 

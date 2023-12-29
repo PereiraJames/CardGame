@@ -10,8 +10,13 @@ public class GameManager : NetworkBehaviour
     public string GameState = "Ready";
     public int PlayerHealth = 20;
     public int EnemyHealth = 20;
-    public int PlayerDoubloons = 2;
-    public int EnemyDoubloons = 2;   
+
+    public int totalPlayerDoubloons = 2;
+    public int currentPlayerDoubloons = 0;
+    
+    public int totalEnemyDoubloons = 2;   
+    public int currentEnemyDoubloons = 0;
+
     public int TotalDoubloons = 40;
 
     private int ReadyClicks = 0;
@@ -22,6 +27,9 @@ public class GameManager : NetworkBehaviour
         UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         // UIManager.UpdatePlayerText();
         UIManager.UpdateButtonText(GameState); 
+
+        currentEnemyDoubloons = totalEnemyDoubloons;
+        currentPlayerDoubloons = totalPlayerDoubloons;
     }
 
     public void Update()
@@ -93,12 +101,16 @@ public class GameManager : NetworkBehaviour
         //     ChangeGameState("Execute {}");
 
         // }
+        UIManager.UpdatePlayerText();
     }
 
     public void EndTurn()
     {
         TurnOrder++;
         UIManager.HighlightTurn(TurnOrder);
+        currentPlayerDoubloons = totalPlayerDoubloons;
+        currentEnemyDoubloons = totalEnemyDoubloons;
+        UIManager.UpdatePlayerText();
     }
 
     public void ChangeBP(int playerBp, int enemyBp, bool isOwned)
@@ -116,7 +128,7 @@ public class GameManager : NetworkBehaviour
         UIManager.UpdatePlayerText();
     }
 
-    public void UpdateDoubloons(int amount, bool isOwned)
+    public void UpdateDoubloons(int amount, bool isOwned, bool stealing)
     {
         if (TotalDoubloons < 1)
         {
@@ -128,16 +140,32 @@ public class GameManager : NetworkBehaviour
             amount = TotalDoubloons;
         }
 
-        if(isOwned)
+        if(stealing)
         {
-            PlayerDoubloons += amount;
-            TotalDoubloons -= amount;
+            if(isOwned)
+            {
+                totalPlayerDoubloons += amount;
+                TotalDoubloons -= amount;
+            }
+            else
+            {
+                totalEnemyDoubloons += amount;
+                TotalDoubloons -= amount;
+            }
         }
-        else
+        
+        if(!stealing)
         {
-            EnemyDoubloons += amount;
-            TotalDoubloons -= amount;
+            if(isOwned)
+            {
+                currentPlayerDoubloons -=amount;
+            }
+            else
+            {
+                currentEnemyDoubloons -= amount;
+            }
         }
+
         UIManager.UpdatePlayerText();
     }
 

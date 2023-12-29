@@ -47,7 +47,7 @@ public class PlayerManager : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
-
+        
         NetworkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
 
         GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -287,15 +287,15 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdStealDbl(int amount)
+    public void CmdUpdateDoubloons(int amount, bool stealing)
     {
-        RpcStealDbl(amount);
+        RpcUpdateDoubloons(amount, stealing);
     }
 
     [ClientRpc]
-    public void RpcStealDbl(int variables)
+    public void RpcUpdateDoubloons(int amount, bool stealing)
     {
-        GameManager.UpdateDoubloons(variables, isOwned);
+        GameManager.UpdateDoubloons(amount, isOwned, stealing);
     }
 
     [Command]
@@ -320,7 +320,6 @@ public class PlayerManager : NetworkBehaviour
     public void RpcGMPlayerHealth(int health)
     {
         GameManager.AdjustPlayerHealth(health, isOwned);
-        Debug.Log(GameManager.PlayerHealth);
     }
 
     [Command]

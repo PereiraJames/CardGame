@@ -8,7 +8,7 @@ public class MG_CS : CardAbilities
     public override void OnCompile()
     {
         PlayerManager.CmdGMEnemyHealth(-1);
-        PlayerManager.CmdStealDbl(2);
+        PlayerManager.CmdUpdateDoubloons(2, true);
     }
 
     public override void OnExecute()
