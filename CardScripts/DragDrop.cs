@@ -16,6 +16,7 @@ public class DragDrop : NetworkBehaviour
     private GameObject dropZone;
     private GameObject startParent;
     private Vector2 startPosition;
+    
 
     private void Start()
     {
@@ -80,7 +81,18 @@ public class DragDrop : NetworkBehaviour
         isDragging = false;
         int cardCost = gameObject.GetComponent<CardDetails>().DoubloonCost;
         int currentPlayerDoubloons = GameManager.currentPlayerDoubloons;
-        if (isOverDropZone && PlayerManager.IsMyTurn && cardCost <= currentPlayerDoubloons)
+        
+        int PlayerSlotCardTotal = 0;
+
+        foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
+        {
+            if (child.gameObject.tag == "Cards")
+            {
+                PlayerSlotCardTotal++;
+            }
+        }
+
+        if (isOverDropZone && PlayerManager.IsMyTurn && cardCost <= currentPlayerDoubloons && PlayerSlotCardTotal < 6)
         {
             PlayerManager.CmdUpdateDoubloons(cardCost,false);
             transform.SetParent(dropZone.transform, false);

@@ -17,6 +17,9 @@ public class GameManager : NetworkBehaviour
     public int totalEnemyDoubloons = 2;   
     public int currentEnemyDoubloons = 0;
 
+    public int amountofPlayerCards = 0;
+    public int amountofEnemyCards = 0;
+
     public int TotalDoubloons = 40;
 
     private int ReadyClicks = 0;
@@ -153,7 +156,7 @@ public class GameManager : NetworkBehaviour
                 TotalDoubloons -= amount;
             }
         }
-        
+
         if(!stealing)
         {
             if(isOwned)

@@ -93,9 +93,16 @@ public class PlayerManager : NetworkBehaviour
     {
         for (int i = 0; i < cardAmount; i++)
         {
-            GameObject card = Instantiate(cards[Random.Range(0,cards.Count)], new Vector3(0,0,0), Quaternion.identity);
-            NetworkServer.Spawn(card, connectionToClient);
-            RpcShowCard(card, "Dealt");
+            if(GameManager.amountofPlayerCards < 8)
+            {
+                GameObject card = Instantiate(cards[Random.Range(0,cards.Count)], new Vector3(0,0,0), Quaternion.identity);
+                NetworkServer.Spawn(card, connectionToClient);
+                RpcShowCard(card, "Dealt");
+                if(isOwned)
+                {
+                    GameManager.amountofPlayerCards++;
+                }
+            }
         }
     }
 
