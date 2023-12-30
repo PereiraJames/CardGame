@@ -6,14 +6,14 @@ using Mirror;
 
 public class DeckScript : NetworkBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public int DeckSize = 30;
+
+    public void UpdateDeckSize(int amount)
     {
-        
+        DeckSize -= amount;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnHoverEnter()
     {
         
     }

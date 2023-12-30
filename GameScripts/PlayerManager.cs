@@ -27,6 +27,9 @@ public class PlayerManager : NetworkBehaviour
     public int cardsPlayed = 0;
 
     public bool AttackBeingMade = false;
+    public bool DestroyBeingMade = false;
+
+    public bool AttackDisplayOpened = false;
 
     public NetworkManager NetworkManager;
 
@@ -115,7 +118,7 @@ public class PlayerManager : NetworkBehaviour
 
     public void PlayCard(GameObject card)
     {
-        card.GetComponent<CardAbilities>().OnCompile();
+        card.GetComponent<CardAbilities>().OnEntry();
         CmdPlayCard(card);
     }
 
@@ -237,6 +240,38 @@ public class PlayerManager : NetworkBehaviour
     }
 
     //CARD ABILITIES
+    [Command]
+    public void CmdDealDamage(GameObject Target, int Damage)
+    {
+        RpcDealDamage(Target, Damage);
+    }
+
+    [ClientRpc]
+    public void RpcDealDamage(GameObject Target, int Damage)
+    {   
+        Target.GetComponent<CardDetails>().SetCardHealth(Damage);
+
+        int TargetHealth = Target.GetComponent<CardDetails>().GetCardHealth();
+        if(TargetHealth < 1)
+        {
+            Target.GetComponent<CardZoom>().OnHoverExit();
+            Destroy(Target);
+        }
+    }
+
+    [Command]
+    public void CmdDestroyTarget(GameObject Target)
+    {
+        RpcDestoryTarget(Target);
+    }
+
+    [ClientRpc]
+    public void RpcDestoryTarget(GameObject Target)
+    {
+        Target.GetComponent<CardZoom>().OnHoverExit();
+        Destroy(Target);
+    }
+
     [Command]
     public void CmdAttackingDetails(GameObject target, int targetNum)
     {

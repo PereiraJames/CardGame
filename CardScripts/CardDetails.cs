@@ -11,6 +11,8 @@ public class CardDetails : NetworkBehaviour
     public bool CanAttack = true;
     public int DoubloonCost = 1;
 
+    public string DeckTag;
+
     public GameObject CardStats;
 
     void Start()

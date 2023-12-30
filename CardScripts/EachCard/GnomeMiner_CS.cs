@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class GnomeMiner_CS : CardAbilities
 {
-    public override void OnCompile()
+    public override void OnEntry()
     {
-        
+        Debug.Log(" ");
     }
 
     public override void OnExecute()

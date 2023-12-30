@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class UnstableOrge_CS : CardAbilities
 {
-    public override void OnCompile()
+    public override void OnEntry()
     {
-        PlayerManager.CmdGMEnemyHealth(-10);
+        GameObject PlayerSlot = PlayerManager.PlayerSlot;
+
+        foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
+        {
+            if (child.gameObject.tag == "Cards")
+            {
+                PlayerManager.CmdDealDamage(child.gameObject, 2);
+            }
+        }
     }
 
     public override void OnExecute()

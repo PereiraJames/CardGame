@@ -35,7 +35,6 @@ public class CardAttack : NetworkBehaviour
     {
         if (PlayerManager.IsMyTurn && isOwned && gameObject.GetComponent<CardDetails>().IsAbleToAttack()) //Must be on players turn, player must have authourity of card and the card must be able to attack
         {
-            Debug.Log("1");
             if (!PlayerManager.AttackBeingMade) //checks if attack is currently being made
             {   
                 if(transform.parent == RectPlayerSlot) //This checks if card is in the PlayerSlot
@@ -64,14 +63,17 @@ public class CardAttack : NetworkBehaviour
             else
             {
                 AttackDisplay(0);
-                PlayerManager.AttackBeingMade = false;
             }
         }
-        else if(PlayerManager.IsMyTurn)
+        else if(PlayerManager.IsMyTurn && PlayerManager.AttackDisplayOpened && isOwned) 
         {
             Debug.Log("4");
             Debug.Log("1) " + PlayerManager.IsMyTurn + " 2) " + isOwned + " 3) " + gameObject.GetComponent<CardDetails>().IsAbleToAttack());
             AttackDisplay(0);
+        }
+        else
+        {
+            Debug.Log("Lol");
         }
     }
 
@@ -80,31 +82,56 @@ public class CardAttack : NetworkBehaviour
         if (!PlayerManager.AttackBeingMade && state == 1)
         {
             Debug.Log("OpenedDisplay");
+            PlayerManager.AttackDisplayOpened = true;
             foreach (GameObject card in EnemyPlayedCards)
             {
-                // card.GetComponent<RectTransform>().sizeDelta = new Vector2(200,280);
                 card.transform.SetParent(AttackingDisplay.transform, false);
             }
         }
         else if (state == 0)
         {
+            EnemyPlayedCards.Clear();
+            foreach (Transform child in AttackingDisplay.GetComponentsInChildren<Transform>())
+            {
+                if (child.gameObject.tag == "Cards")
+                {
+                    EnemyPlayedCards.Add(child.gameObject);
+                }
+            }
             foreach (GameObject card in EnemyPlayedCards)
             { 
                 card.transform.SetParent(EnemySlot.transform, false);
             }
-            EnemyPlayedCards.Clear();
             Debug.Log("ClosedDisplay");
+            PlayerManager.AttackBeingMade = false;
+            PlayerManager.DestroyBeingMade = false;
+            PlayerManager.AttackDisplayOpened = false;
         }
     }
 
-    public void SelectedTarget()
+    public void SelectedTarget() //Used to set 
     {
-        if(PlayerManager.AttackBeingMade && PlayerManager.AttackingTarget != null && !isOwned)
+        if(PlayerManager.AttackDisplayOpened)
         {
-            if(gameObject != PlayerManager.AttackingTarget)
+            Debug.Log("SelectedTarget");
+            if(PlayerManager.AttackBeingMade && PlayerManager.AttackingTarget != null && !isOwned)
             {
-                PlayerManager.CmdAttackingDetails(gameObject, 1); 
-                Debug.Log("SelectedTarget: " + PlayerManager.AttackedTarget);
+                if(gameObject != PlayerManager.AttackingTarget)
+                {
+                    PlayerManager.CmdAttackingDetails(gameObject, 1); 
+                    Debug.Log("SelectedTarget: " + PlayerManager.AttackedTarget);
+                }
+            }
+            else if(PlayerManager.DestroyBeingMade && !isOwned)
+            {
+                PlayerManager.CmdDestroyTarget(gameObject); 
+                AttackDisplay(0);
+                Debug.Log("Close");
+                PlayerManager.DestroyBeingMade = false;
+            }
+            else
+            {
+                Debug.Log("DestroyBeingMade" + PlayerManager.DestroyBeingMade);
             }
         }
     }
@@ -119,5 +146,19 @@ public class CardAttack : NetworkBehaviour
                 AttackDisplay(0);
             }
         }
+    }
+
+    public void DestroyTarget()
+    {
+        Debug.Log("Destroy");
+        foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
+        {
+            if (child.gameObject.tag == "Cards")
+            {
+                EnemyPlayedCards.Add(child.gameObject);
+            }
+        }
+        PlayerManager.DestroyBeingMade = true;
+        AttackDisplay(1);
     }
 }

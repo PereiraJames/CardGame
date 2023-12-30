@@ -5,9 +5,8 @@ using Mirror;
 
 public class MG_CS : CardAbilities
 {
-    public override void OnCompile()
+    public override void OnEntry()
     {
-        PlayerManager.CmdGMEnemyHealth(-1);
         PlayerManager.CmdUpdateDoubloons(2, true);
     }
 

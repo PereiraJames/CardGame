@@ -13,7 +13,7 @@ public abstract class CardAbilities : NetworkBehaviour
         PlayerManager = networkIdentity.GetComponent<PlayerManager>();
     }
 
-    public abstract void OnCompile();
+    public abstract void OnEntry();
 
     public abstract void OnExecute();
 

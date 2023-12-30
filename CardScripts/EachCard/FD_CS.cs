@@ -5,7 +5,7 @@ using Mirror;
 
 public class FD_CS : CardAbilities
 {
-    public override void OnCompile()
+    public override void OnEntry()
     {
         PlayerManager.CmdGMPlayerHealth(2);
         PlayerManager.CmdGMEnemyHealth(-1);
