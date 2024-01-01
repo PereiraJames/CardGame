@@ -7,6 +7,7 @@ public class DrawCards : NetworkBehaviour
 {
     public PlayerManager PlayerManager;
     public GameManager GameManager;
+    public NetworkManager NetworkManager;
 
     private void Start()
     {
@@ -37,15 +38,14 @@ public class DrawCards : NetworkBehaviour
 
     void IntializeClick()
     {
-        PlayerManager.CmdDealCards(5);
+        PlayerManager.CmdDealCards(5, GameManager.PlayerDeck);
         PlayerManager.CmdGMChangeState("End Turn");
-
     }
 
     void Endturn()
     {
         PlayerManager.CmdEndTurn();
-        PlayerManager.CmdDealCards(1);
+        PlayerManager.CmdDealCards(1, GameManager.PlayerDeck);
     }
 
     // void ExecuteClick()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Mirror;
 
 public class PlayerManager : NetworkBehaviour
@@ -19,6 +20,8 @@ public class PlayerManager : NetworkBehaviour
 
     public GameObject PlayerImage;
     public GameObject EnemyImage;
+
+    public DrawCards DrawCards;
 
     public GameObject PlayerYard;
     public GameObject EnemyYard;
@@ -46,12 +49,24 @@ public class PlayerManager : NetworkBehaviour
     public GameObject AttackingTarget;
 
     public GameManager GameManager;
+    public UIManager UIManager;
 
     public int CardsPlayed = 0;
 
     public bool IsMyTurn = false;
 
+    public List <string> PlayerDecks = new List<string>() {"Keagan", "Mark", "Deion", "Chris"};
+
     private List <GameObject> cards = new List<GameObject>();
+
+    public List <GameObject> ChrisDeck = new List<GameObject>();
+    
+    public List <GameObject> KeaganDeck = new List<GameObject>();
+
+    public List <GameObject> MarkDeck = new List<GameObject>();
+
+    public List <GameObject> DeionDeck = new List<GameObject>();
+
 
     // [SyncVar]
     // int cardsPlayed = 0;
@@ -60,10 +75,13 @@ public class PlayerManager : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
-        
+
         NetworkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
 
+        DrawCards = GameObject.Find("Button").GetComponent<DrawCards>();
+        
         GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
         PlayerArea = GameObject.Find("PlayerArea");
         EnemyArea = GameObject.Find("EnemyArea");
@@ -82,39 +100,72 @@ public class PlayerManager : NetworkBehaviour
 
         AttackingDisplay = GameObject.Find("AttackingDisplay");
 
-
-        foreach (GameObject tests in NetworkManager.spawnPrefabs) //Auto puts prefabs into a list(or a deck)
-        {
-            if(tests.tag == "Cards")
-            {
-                cards.Add(tests);
-            }
-        }
-
         if(isClientOnly)
         {
             IsMyTurn = true;
+        }
+
+        foreach (GameObject card in NetworkManager.spawnPrefabs) //Auto puts prefabs into a list(or a deck)
+        {
+            if(card.tag == "Cards")
+            {
+                if(card.GetComponent<CardDetails>().DeckTag == "Keagan")
+                {
+                    KeaganDeck.Add(card);
+                }
+                else if(card.GetComponent<CardDetails>().DeckTag == "Mark")
+                {
+                    MarkDeck.Add(card);
+                }
+                else if(card.GetComponent<CardDetails>().DeckTag == "Deion")
+                {
+                    DeionDeck.Add(card);
+                }
+                else if (card.GetComponent<CardDetails>().DeckTag == "Chris")
+                {
+                    ChrisDeck.Add(card);
+                }
+                Debug.Log(card);
+            }
         }
     }
 
     [Server]
     public override void OnStartServer()
     {
-        // cards.Add(Ping);
-        // cards.Add(UD);
-        // cards.Add(FD);
-        // cards.Add(MG);
-        // cards.Add(RS);
+
     }
 
     [Command]
-    public void CmdDealCards(int cardAmount)
+    public void CmdDealCards(int cardAmount, string deckName)
     {
+        List <GameObject> deck = new List <GameObject>();
+        if(deckName == "Keagan")
+        {
+            deck = KeaganDeck;
+        }
+        else if (deckName == "Mark")
+        {
+            deck = MarkDeck;
+        }
+        else if (deckName == "Chris")
+        {
+            deck = ChrisDeck;
+        }
+        else if (deckName == "Deion")
+        {
+            deck = DeionDeck;
+        }
+
         for (int i = 0; i < cardAmount; i++)
         {
             if(GameManager.amountofPlayerCards < 8)
             {
-                GameObject card = Instantiate(cards[Random.Range(0,cards.Count)], new Vector3(0,0,0), Quaternion.identity);
+                foreach(GameObject xor in deck)
+                {
+                    Debug.Log(xor);
+                }
+                GameObject card = Instantiate(deck[Random.Range(0,deck.Count)], new Vector3(0,0,0), Quaternion.identity);
                 NetworkServer.Spawn(card, connectionToClient);
                 RpcShowCard(card, "Dealt");
                 if(isOwned)
@@ -321,6 +372,65 @@ public class PlayerManager : NetworkBehaviour
     void RpcGMCardPlayed()
     {
         GameManager.CardPlayed();
+    }
+
+    [Command]
+    public void CmdDeckSelection()
+    {
+        RpcDeckSelection();
+    }
+
+    [ClientRpc]
+    public void RpcDeckSelection()
+    {
+        int ranNum = Random.Range(0, PlayerDecks.Count);
+        // string SelectedDeck = PlayerDecks[ranNum];
+        string SelectedDeck = "Chris";
+
+        PlayerDecks.RemoveAt(ranNum);
+
+        Debug.Log("RPCSelectedDeck: " + SelectedDeck);
+        UIManager.SelectedDeck = SelectedDeck;
+
+        if (isOwned)
+        {
+            GameManager.PlayerDeck = SelectedDeck;
+            if(SelectedDeck == "Mark")
+            {
+                PlayerImage.GetComponent<Image>().sprite = UIManager.MarkImage;
+            }
+            else if (SelectedDeck == "Keagan")
+            {
+                PlayerImage.GetComponent<Image>().sprite = UIManager.KeaganImage;
+            }
+            else if (SelectedDeck == "Deion")
+            {
+                PlayerImage.GetComponent<Image>().sprite = UIManager.DeionImage;
+            }
+            else if (SelectedDeck == "Chris")
+            {
+                PlayerImage.GetComponent<Image>().sprite = UIManager.ChrisImage;
+            }     
+        }
+        else
+        {
+            if(SelectedDeck == "Mark")
+            {
+                EnemyImage.GetComponent<Image>().sprite = UIManager.MarkImage;
+            }
+            else if (SelectedDeck == "Keagan")
+            {
+                EnemyImage.GetComponent<Image>().sprite = UIManager.KeaganImage;
+            }
+            else if (SelectedDeck == "Deion")
+            {
+                EnemyImage.GetComponent<Image>().sprite = UIManager.DeionImage;
+            }
+            else if (SelectedDeck == "Chris")
+            {
+                EnemyImage.GetComponent<Image>().sprite = UIManager.ChrisImage;
+            }             
+        }
     }
 
     //CARD ABILITIES

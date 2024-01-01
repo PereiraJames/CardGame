@@ -6,7 +6,7 @@ using Mirror;
 public class GameManager : NetworkBehaviour
 {
     public UIManager UIManager;
-    public GameObject PlayerSlot;
+    public GameObject PlayerSlot;    
     public int TurnOrder = 0;
     public string GameState = "Ready";
     public int PlayerHealth = 20;
@@ -24,6 +24,8 @@ public class GameManager : NetworkBehaviour
     public int TotalDoubloons = 40;
 
     private int ReadyClicks = 0;
+
+    public string PlayerDeck;
 
     // Start is called before the first frame update
     void Start()

@@ -15,7 +15,13 @@ public class UIManager : NetworkBehaviour
     public GameObject PlayerDblText;
     public GameObject DoubloonText;
     public GameObject currentSelectedCard;
+    public GameObject PlayerIamge;
+    public GameObject EnemyPicture;
     public bool isCardSelected;
+
+    public Sprite KeaganImage, MarkImage, ChrisImage, DeionImage;
+
+    public string SelectedDeck;
 
     public GameObject Canvas;
     public GameObject WinDisplay;
@@ -27,6 +33,12 @@ public class UIManager : NetworkBehaviour
         Canvas = GameObject.Find("Main Canvas");
         GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         UpdatePlayerText();
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient(); //Important for accessing the OnStartClient() method.
+        Debug.Log("Player Joined");
     }
 
     public void DisplayWin(bool Win)
@@ -61,7 +73,7 @@ public class UIManager : NetworkBehaviour
 
     public void HighlightTurn(int turnOrder)
     {
-        PlayerManager = NetworkClient.connection.identity.GetComponent<PlayerManager>();
+        // PlayerManager = NetworkClient.connection.identity.GetComponent<PlayerManager>();
 
             if (turnOrder == 0)
             {
