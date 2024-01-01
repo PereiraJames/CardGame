@@ -73,7 +73,7 @@ public class UIManager : NetworkBehaviour
 
     public void HighlightTurn(int turnOrder)
     {
-        // PlayerManager = NetworkClient.connection.identity.GetComponent<PlayerManager>();
+        PlayerManager = NetworkClient.connection.identity.GetComponent<PlayerManager>();
 
             if (turnOrder == 0)
             {
