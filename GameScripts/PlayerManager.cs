@@ -190,56 +190,65 @@ public class PlayerManager : NetworkBehaviour
         if(isOwned)
         {
             foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
+            {
+                if(child.gameObject.tag == "Cards")
+                {
+                    EnemyPlayedCards.Add(child.gameObject);
+                }
+            }
+            if (!AttackBeingMade && state == "OpenDisplay" && EnemyPlayedCards.Count > 0)
+            {
+                Debug.Log("OpenedDisplay");
+                AttackDisplayOpened = true;
+                if(EnemyPlayedCards.Count > 0)
+                {
+                    foreach (GameObject card in EnemyPlayedCards)
+                    {
+                        card.transform.SetParent(AttackingDisplay.transform, false);
+                    }            
+                }
+                else
+                {
+                    Debug.Log("EnemyPlayedCards is empty");
+                }
+                AttackBeingMade = true;
+            }
+            else if (state == "CloseDisplay")
+            {
+                foreach (Transform child in AttackingDisplay.GetComponentsInChildren<Transform>())
                 {
                     if(child.gameObject.tag == "Cards")
                     {
                         EnemyPlayedCards.Add(child.gameObject);
                     }
                 }
-
-
-
-                if (!AttackBeingMade && state == "OpenDisplay")
+                foreach (GameObject card in EnemyPlayedCards)
                 {
-                    Debug.Log("OpenedDisplay");
-                    AttackDisplayOpened = true;
-                    if(EnemyPlayedCards.Count > 0)
-                    {
-                        foreach (GameObject card in EnemyPlayedCards)
-                        {
-                            card.transform.SetParent(AttackingDisplay.transform, false);
-                        }            
-                    }
-                    else
-                    {
-                        Debug.Log("EnemyPlayedCards is empty");
-                    }
-                    AttackBeingMade = true;
+                    card.transform.SetParent(EnemySlot.transform, false);
                 }
-                else if (state == "CloseDisplay")
-                {
-                    foreach (Transform child in AttackingDisplay.GetComponentsInChildren<Transform>())
-                    {
-                        if(child.gameObject.tag == "Cards")
-                        {
-                            EnemyPlayedCards.Add(child.gameObject);
-                        }
-                    }
-                    foreach (GameObject card in EnemyPlayedCards)
-                    {
-                        card.transform.SetParent(EnemySlot.transform, false);
-                    }
-                    Debug.Log("ClosedDisplay");
-                    AttackBeingMade = false;
-                    DestroyBeingMade = false;
-                    AttackDisplayOpened = false;
+                Debug.Log("ClosedDisplay");
+                AttackBeingMade = false;
+                DestroyBeingMade = false;
+                AttackDisplayOpened = false;
 
-                }
-                else
-                {
-                    Debug.Log("Did not do anythin - Display");
-                }
-                EnemyPlayedCards.Clear();
+            }
+            else
+            {
+                Debug.Log("Did not do anythin - Display");
+            }
+            EnemyPlayedCards.Clear();
+        }
+        else 
+        {
+            if(!isOwned)
+            {
+                Debug.Log("Is Not Owned");
+            }
+
+            else
+            {
+                Debug.Log("Error! RpcShowAttackDisplay");
+            }
         }
     }
 
@@ -252,6 +261,7 @@ public class PlayerManager : NetworkBehaviour
     [ClientRpc]
     public void RpcEndTurn()
     {
+        CmdShowAttackDisplay("CloseDisplay");
         PlayerManager pm = NetworkClient.connection.identity.GetComponent<PlayerManager>();
         pm.IsMyTurn = !pm.IsMyTurn;
         GameManager.EndTurn();
