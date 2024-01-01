@@ -13,30 +13,30 @@ public class CardHighlight : MonoBehaviour
     }
     public void CardSelect()
     {
-        if(!UIManager.isCardSelected && isDrag() == false)
-        {
-            UIManager.isCardSelected = true;
+        // if(!UIManager.isCardSelected && isDrag() == false)
+        // {
+        //     UIManager.isCardSelected = true;
 
-            if(UIManager.currentSelectedCard != null)
-            {
-                UIManager.currentSelectedCard.GetComponent<Outline>().effectDistance = new Vector2(1,1);
-            }
+        //     if(UIManager.currentSelectedCard != null)
+        //     {
+        //         UIManager.currentSelectedCard.GetComponent<Outline>().effectDistance = new Vector2(1,1);
+        //     }
 
-            UIManager.currentSelectedCard = gameObject;
-            UIManager.currentSelectedCard.GetComponent<Outline>().effectDistance = new Vector2(10,10);
-        }
-        else if(UIManager.isCardSelected && UIManager.currentSelectedCard == gameObject && isDrag() == false)
-        {
-            UIManager.isCardSelected = false;
-            UIManager.currentSelectedCard.GetComponent<Outline>().effectDistance = new Vector2(1,1);
-            UIManager.currentSelectedCard = null;
-        }
-        else if(UIManager.isCardSelected && UIManager.currentSelectedCard != gameObject && isDrag() == false)
-        {
-            UIManager.currentSelectedCard.GetComponent<Outline>().effectDistance = new Vector2(1,1);
-            UIManager.currentSelectedCard = gameObject;
-            UIManager.currentSelectedCard.GetComponent<Outline>().effectDistance = new Vector2(10,10);
-        }
+        //     UIManager.currentSelectedCard = gameObject;
+        //     UIManager.currentSelectedCard.GetComponent<Outline>().effectDistance = new Vector2(10,10);
+        // }
+        // else if(UIManager.isCardSelected && UIManager.currentSelectedCard == gameObject && isDrag() == false)
+        // {
+        //     UIManager.isCardSelected = false;
+        //     UIManager.currentSelectedCard.GetComponent<Outline>().effectDistance = new Vector2(1,1);
+        //     UIManager.currentSelectedCard = null;
+        // }
+        // else if(UIManager.isCardSelected && UIManager.currentSelectedCard != gameObject && isDrag() == false)
+        // {
+        //     UIManager.currentSelectedCard.GetComponent<Outline>().effectDistance = new Vector2(1,1);
+        //     UIManager.currentSelectedCard = gameObject;
+        //     UIManager.currentSelectedCard.GetComponent<Outline>().effectDistance = new Vector2(10,10);
+        // }
     }
 
     public bool isDrag()

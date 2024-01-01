@@ -99,6 +99,7 @@ public class DragDrop : NetworkBehaviour
             isDraggable = false;
             // NetworkIdentity networkIdentity = NetworkClient.connection.identity;
             // PlayerManager = networkIdentity.GetComponent<PlayerManager>();
+            
             PlayerManager.PlayCard(gameObject);
         }   
         else

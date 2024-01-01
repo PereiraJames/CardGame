@@ -24,12 +24,18 @@ public class PlayerManager : NetworkBehaviour
     public GameObject EnemyYard;
     public List <GameObject> PlayerSockets = new List<GameObject>();
     public List <GameObject> EnemySockets = new List<GameObject>();
+
+    public List <GameObject> EnemyPlayedCards = new List<GameObject>();
+    public List <GameObject> PlayerPlayedCards = new List<GameObject>();
+    
     public int cardsPlayed = 0;
 
     public bool AttackBeingMade = false;
     public bool DestroyBeingMade = false;
 
     public bool AttackDisplayOpened = false;
+    public GameObject AttackingDisplay;
+
 
     public NetworkManager NetworkManager;
 
@@ -73,6 +79,9 @@ public class PlayerManager : NetworkBehaviour
 
         PlayerSockets.Add(PlayerSlot);
         EnemySockets.Add(EnemySlot);
+
+        AttackingDisplay = GameObject.Find("AttackingDisplay");
+
 
         foreach (GameObject tests in NetworkManager.spawnPrefabs) //Auto puts prefabs into a list(or a deck)
         {
@@ -169,6 +178,55 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
+    // [Command]
+    // public void CmdShowAttackDisplay(int state)
+    // {
+    //     foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
+    //     {
+    //         if(child.gameObject.tag == "Cards")
+    //         {
+    //             EnemyPlayedCards.Add(child.gameObject);
+    //         }
+    //     }
+
+    //     if (AttackBeingMade && state == 1)
+    //     {
+    //         Debug.Log("OpenedDisplay");
+    //         AttackDisplayOpened = true;
+    //         if(EnemyPlayedCards.Count > 0)
+    //         {
+    //             foreach (GameObject card in EnemyPlayedCards)
+    //             {
+    //                 card.transform.SetParent(AttackingDisplay.transform, false);
+    //             }            
+    //         }
+    //         else
+    //         {
+    //             Debug.Log("EnemyPlayedCards is empty");
+    //         }        
+    //     }
+    //     else if (state == 0)
+    //     {
+    //         EnemyPlayedCards.Clear();
+    //         foreach (Transform child in AttackingDisplay.GetComponentsInChildren<Transform>())
+    //         {
+    //             if(child.gameObject.tag == "Cards")
+    //             {
+    //                 EnemyPlayedCards.Add(child.gameObject);
+    //             }
+    //         }
+    //         foreach (GameObject card in EnemyPlayedCards)
+    //         {
+    //             card.transform.SetParent(EnemySlot.transform, false);
+    //         }
+    //         Debug.Log("ClosedDisplay");
+    //         AttackBeingMade = false;
+    //         DestroyBeingMade = false;
+    //         AttackDisplayOpened = false;
+
+    //     }
+    // }
+
     [Command]
     public void CmdEndTurn()
     {
@@ -255,6 +313,7 @@ public class PlayerManager : NetworkBehaviour
         if(TargetHealth < 1)
         {
             Target.GetComponent<CardZoom>().OnHoverExit();
+            Debug.Log("RPCDealDamage() : " + Target);
             Destroy(Target);
         }
     }
@@ -269,6 +328,7 @@ public class PlayerManager : NetworkBehaviour
     public void RpcDestoryTarget(GameObject Target)
     {
         Target.GetComponent<CardZoom>().OnHoverExit();
+        Debug.Log("RPCDestoryTarget: " + Target);
         Destroy(Target);
     }
 
@@ -311,15 +371,15 @@ public class PlayerManager : NetworkBehaviour
         EnemyHealth = AttackedTarget.GetComponent<CardDetails>().GetCardHealth();
 
         EnemyHealth -= AttackDamage;
-        Debug.Log("Enemy Health: " + EnemyHealth);
         AttackedTarget.GetComponent<CardDetails>().SetCardHealth(EnemyHealth);
+        AttackedTarget.GetComponent<CardDetails>().UpdateCardText();
+        AttackingTarget.GetComponent<CardDetails>().AttackTurn(false);
         if(EnemyHealth < 1)
         {
             AttackedTarget.GetComponent<CardZoom>().OnHoverExit();
+            Debug.Log("RPCardAttack(): " + gameObject);
             Destroy(AttackedTarget);
         }
-        AttackedTarget.GetComponent<CardDetails>().UpdateCardText();
-        AttackingTarget.GetComponent<CardDetails>().AttackTurn(false);
         AttackingTarget = null;
         AttackedTarget = null;
     }

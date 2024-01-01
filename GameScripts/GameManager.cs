@@ -6,6 +6,7 @@ using Mirror;
 public class GameManager : NetworkBehaviour
 {
     public UIManager UIManager;
+    public GameObject PlayerSlot;
     public int TurnOrder = 0;
     public string GameState = "Ready";
     public int PlayerHealth = 20;
@@ -30,6 +31,7 @@ public class GameManager : NetworkBehaviour
         UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         // UIManager.UpdatePlayerText();
         UIManager.UpdateButtonText(GameState); 
+        PlayerSlot = GameObject.Find("PlayerSlot");
 
         currentEnemyDoubloons = totalEnemyDoubloons;
         currentPlayerDoubloons = totalPlayerDoubloons;
@@ -111,6 +113,15 @@ public class GameManager : NetworkBehaviour
     {
         TurnOrder++;
         UIManager.HighlightTurn(TurnOrder);
+
+        foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
+        {
+            if (child.gameObject.tag == "Cards")
+            {
+                child.GetComponent<CardDetails>().CanAttack = true;
+            }
+        }        
+        
         currentPlayerDoubloons = totalPlayerDoubloons;
         currentEnemyDoubloons = totalEnemyDoubloons;
         UIManager.UpdatePlayerText();
