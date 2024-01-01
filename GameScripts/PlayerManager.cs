@@ -178,54 +178,70 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
-    // [Command]
-    // public void CmdShowAttackDisplay(int state)
-    // {
-    //     foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
-    //     {
-    //         if(child.gameObject.tag == "Cards")
-    //         {
-    //             EnemyPlayedCards.Add(child.gameObject);
-    //         }
-    //     }
+    [Command]
+    public void CmdShowAttackDisplay(string state)
+    {
+        RpcShowAttackDisplay(state);
+    }
 
-    //     if (AttackBeingMade && state == 1)
-    //     {
-    //         Debug.Log("OpenedDisplay");
-    //         AttackDisplayOpened = true;
-    //         if(EnemyPlayedCards.Count > 0)
-    //         {
-    //             foreach (GameObject card in EnemyPlayedCards)
-    //             {
-    //                 card.transform.SetParent(AttackingDisplay.transform, false);
-    //             }            
-    //         }
-    //         else
-    //         {
-    //             Debug.Log("EnemyPlayedCards is empty");
-    //         }        
-    //     }
-    //     else if (state == 0)
-    //     {
-    //         EnemyPlayedCards.Clear();
-    //         foreach (Transform child in AttackingDisplay.GetComponentsInChildren<Transform>())
-    //         {
-    //             if(child.gameObject.tag == "Cards")
-    //             {
-    //                 EnemyPlayedCards.Add(child.gameObject);
-    //             }
-    //         }
-    //         foreach (GameObject card in EnemyPlayedCards)
-    //         {
-    //             card.transform.SetParent(EnemySlot.transform, false);
-    //         }
-    //         Debug.Log("ClosedDisplay");
-    //         AttackBeingMade = false;
-    //         DestroyBeingMade = false;
-    //         AttackDisplayOpened = false;
+    [ClientRpc]
+    public void RpcShowAttackDisplay(string state)
+    {
+        if(isOwned)
+        {
+            foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
+                {
+                    if(child.gameObject.tag == "Cards")
+                    {
+                        EnemyPlayedCards.Add(child.gameObject);
+                    }
+                }
 
-    //     }
-    // }
+
+
+                if (!AttackBeingMade && state == "OpenDisplay")
+                {
+                    Debug.Log("OpenedDisplay");
+                    AttackDisplayOpened = true;
+                    if(EnemyPlayedCards.Count > 0)
+                    {
+                        foreach (GameObject card in EnemyPlayedCards)
+                        {
+                            card.transform.SetParent(AttackingDisplay.transform, false);
+                        }            
+                    }
+                    else
+                    {
+                        Debug.Log("EnemyPlayedCards is empty");
+                    }
+                    AttackBeingMade = true;
+                }
+                else if (state == "CloseDisplay")
+                {
+                    foreach (Transform child in AttackingDisplay.GetComponentsInChildren<Transform>())
+                    {
+                        if(child.gameObject.tag == "Cards")
+                        {
+                            EnemyPlayedCards.Add(child.gameObject);
+                        }
+                    }
+                    foreach (GameObject card in EnemyPlayedCards)
+                    {
+                        card.transform.SetParent(EnemySlot.transform, false);
+                    }
+                    Debug.Log("ClosedDisplay");
+                    AttackBeingMade = false;
+                    DestroyBeingMade = false;
+                    AttackDisplayOpened = false;
+
+                }
+                else
+                {
+                    Debug.Log("Did not do anythin - Display");
+                }
+                EnemyPlayedCards.Clear();
+        }
+    }
 
     [Command]
     public void CmdEndTurn()

@@ -30,7 +30,6 @@ public class CardZoom : MonoBehaviour
 
     public void OnHoverExit()
     {
-        Debug.Log("OnHoverExit(): " + zoomCard);
         Destroy(zoomCard);
     }
 }

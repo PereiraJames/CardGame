@@ -11,8 +11,6 @@ public class CardAttack : NetworkBehaviour
     private PlayerManager PlayerManager;
     private RectTransform RectPlayerSlot;
 
-    public List <GameObject> EnemyPlayedCards = new List<GameObject>();
-    public List <GameObject> PlayerPlayedCards = new List<GameObject>();
 
     public GameObject EnemySlot;
     public GameObject PlayerSlot;
@@ -38,40 +36,19 @@ public class CardAttack : NetworkBehaviour
             if (!PlayerManager.AttackBeingMade) //checks if attack is currently being made
             {   
                 if(transform.parent == RectPlayerSlot) //This checks if card is in the PlayerSlot
-                {               
-                    // foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
-                    // {
-                    //     if (child.gameObject.tag == "Cards")
-                    //     {
-                    //         PlayerPlayedCards.Add(child.gameObject);
-                    //     }
-                    // }
-
-                    foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
-                    {
-                        if (child.gameObject.tag == "Cards")
-                        {
-                            EnemyPlayedCards.Add(child.gameObject);
-                        }
-                    }
-                    if(EnemyPlayedCards.Count > 0)
-                    {
-                        PlayerManager.CmdAttackingDetails(gameObject, 0);
-                        Debug.Log("2");
-                        AttackDisplay(1);
-                        PlayerManager.AttackBeingMade = true;
-                    }
-                    Debug.Log("EnemyPlayedCards: " + EnemyPlayedCards.Count);
+                {
+                    PlayerManager.CmdAttackingDetails(gameObject, 0);
+                    PlayerManager.CmdShowAttackDisplay("OpenDisplay");
                 }
             }
             else
             {
-                AttackDisplay(0);
+                PlayerManager.CmdShowAttackDisplay("CloseDisplay");
             }
         }
         else if(PlayerManager.IsMyTurn && PlayerManager.AttackDisplayOpened && isOwned) 
         {
-            AttackDisplay(0);
+            PlayerManager.CmdShowAttackDisplay("CloseDisplay");
         }
         else
         {
@@ -79,45 +56,45 @@ public class CardAttack : NetworkBehaviour
         }
     }
 
-    public void AttackDisplay(int state)
-    {
-        if (!PlayerManager.AttackBeingMade && state == 1)
-        {
-            Debug.Log("OpenedDisplay");
-            PlayerManager.AttackDisplayOpened = true;
-            if (EnemyPlayedCards.Count > 0)
-            {
-                foreach (GameObject card in EnemyPlayedCards)
-                {
-                    card.transform.SetParent(AttackingDisplay.transform, false);
-                }
-            }
-            else
-            {
-                Debug.Log("EnemyPlayedCards is empty");
-            }
-            EnemyPlayedCards.Clear();
-        }
-        else if (state == 0)
-        {
-            EnemyPlayedCards.Clear();
-            foreach (Transform child in AttackingDisplay.GetComponentsInChildren<Transform>())
-            {
-                if (child.gameObject.tag == "Cards")
-                {
-                    EnemyPlayedCards.Add(child.gameObject);
-                }
-            }
-            foreach (GameObject card in EnemyPlayedCards)
-            { 
-                card.transform.SetParent(EnemySlot.transform, false);
-            }
-            Debug.Log("ClosedDisplay");
-            PlayerManager.AttackBeingMade = false;
-            PlayerManager.DestroyBeingMade = false;
-            PlayerManager.AttackDisplayOpened = false;
-        }
-    }
+    // public void AttackDisplay(int state)
+    // {
+    //     if (!PlayerManager.AttackBeingMade && state == 1)
+    //     {
+    //         Debug.Log("OpenedDisplay");
+    //         PlayerManager.AttackDisplayOpened = true;
+    //         if (EnemyPlayedCards.Count > 0)
+    //         {
+    //             foreach (GameObject card in EnemyPlayedCards)
+    //             {
+    //                 card.transform.SetParent(AttackingDisplay.transform, false);
+    //             }
+    //         }
+    //         else
+    //         {
+    //             Debug.Log("EnemyPlayedCards is empty");
+    //         }
+    //         EnemyPlayedCards.Clear();
+    //     }
+    //     else if (state == 0)
+    //     {
+    //         EnemyPlayedCards.Clear();
+    //         foreach (Transform child in AttackingDisplay.GetComponentsInChildren<Transform>())
+    //         {
+    //             if (child.gameObject.tag == "Cards")
+    //             {
+    //                 EnemyPlayedCards.Add(child.gameObject);
+    //             }
+    //         }
+    //         foreach (GameObject card in EnemyPlayedCards)
+    //         { 
+    //             card.transform.SetParent(EnemySlot.transform, false);
+    //         }
+    //         Debug.Log("ClosedDisplay");
+    //         PlayerManager.AttackBeingMade = false;
+    //         PlayerManager.DestroyBeingMade = false;
+    //         PlayerManager.AttackDisplayOpened = false;
+    //     }
+    // }
 
     public void SelectedTarget() //In perspective of selected target
     {
@@ -134,7 +111,7 @@ public class CardAttack : NetworkBehaviour
             {
                 Debug.Log("Destroying: " + gameObject);
                 PlayerManager.CmdDestroyTarget(gameObject); 
-                AttackDisplay(0);
+                PlayerManager.CmdShowAttackDisplay("CloseDisplay");
                 PlayerManager.DestroyBeingMade = false;
             }
             else
@@ -151,7 +128,7 @@ public class CardAttack : NetworkBehaviour
             if(PlayerManager.IsMyTurn)
             {
                 PlayerManager.CmdCardAttack();
-                AttackDisplay(0);
+                PlayerManager.CmdShowAttackDisplay("CloseDisplay");
             }
         }
     }
@@ -159,17 +136,7 @@ public class CardAttack : NetworkBehaviour
     public void DestroyTarget()
     {
         Debug.Log("Destroy");
-        foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
-        {
-            if (child.gameObject.tag == "Cards")
-            {
-                EnemyPlayedCards.Add(child.gameObject);
-            }
-        }
-        if (EnemyPlayedCards.Count > 0)
-        {               
-            PlayerManager.DestroyBeingMade = true;
-            AttackDisplay(1);
-        }
+        PlayerManager.DestroyBeingMade = true;
+        PlayerManager.CmdShowAttackDisplay("OpenDisplay");
     }
 }
