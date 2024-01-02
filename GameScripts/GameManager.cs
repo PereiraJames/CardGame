@@ -18,8 +18,11 @@ public class GameManager : NetworkBehaviour
     public int totalEnemyDoubloons = 2;   
     public int currentEnemyDoubloons = 0;
 
-    public int amountofPlayerCards = 0;
-    public int amountofEnemyCards = 0;
+    public int PlayerDeckSize = 0;
+    public int EnemyDeckSize = 0;
+
+    public int PlayerHandSize = 0;
+    public int EnemyHandSize = 0;
 
     public int TotalDoubloons = 40;
 

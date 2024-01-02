@@ -159,7 +159,7 @@ public class PlayerManager : NetworkBehaviour
 
         for (int i = 0; i < cardAmount; i++)
         {
-            if(GameManager.amountofPlayerCards < 8)
+            if(GameManager.PlayerHandSize < 8)
             {
                 foreach(GameObject xor in deck)
                 {
@@ -170,7 +170,7 @@ public class PlayerManager : NetworkBehaviour
                 RpcShowCard(card, "Dealt");
                 if(isOwned)
                 {
-                    GameManager.amountofPlayerCards++;
+                    GameManager.PlayerHandSize++;
                 }
             }
         }
@@ -398,18 +398,22 @@ public class PlayerManager : NetworkBehaviour
             if(SelectedDeck == "Mark")
             {
                 PlayerImage.GetComponent<Image>().sprite = UIManager.MarkImage;
+                GameManager.PlayerDeckSize = MarkDeck.Count;
             }
             else if (SelectedDeck == "Keagan")
             {
                 PlayerImage.GetComponent<Image>().sprite = UIManager.KeaganImage;
+                GameManager.PlayerDeckSize = KeaganDeck.Count;
             }
             else if (SelectedDeck == "Deion")
             {
                 PlayerImage.GetComponent<Image>().sprite = UIManager.DeionImage;
+                GameManager.PlayerDeckSize = DeionDeck.Count;
             }
             else if (SelectedDeck == "Chris")
             {
                 PlayerImage.GetComponent<Image>().sprite = UIManager.ChrisImage;
+                GameManager.PlayerDeckSize = ChrisDeck.Count;
             }     
         }
         else
@@ -417,18 +421,22 @@ public class PlayerManager : NetworkBehaviour
             if(SelectedDeck == "Mark")
             {
                 EnemyImage.GetComponent<Image>().sprite = UIManager.MarkImage;
+                GameManager.EnemyDeckSize = MarkDeck.Count;
             }
             else if (SelectedDeck == "Keagan")
             {
                 EnemyImage.GetComponent<Image>().sprite = UIManager.KeaganImage;
+                GameManager.EnemyDeckSize = KeaganDeck.Count;
             }
             else if (SelectedDeck == "Deion")
             {
                 EnemyImage.GetComponent<Image>().sprite = UIManager.DeionImage;
+                GameManager.EnemyDeckSize = DeionDeck.Count;
             }
             else if (SelectedDeck == "Chris")
             {
                 EnemyImage.GetComponent<Image>().sprite = UIManager.ChrisImage;
+                GameManager.EnemyDeckSize = ChrisDeck.Count;
             }             
         }
     }
