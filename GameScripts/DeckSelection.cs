@@ -8,11 +8,13 @@ public class DeckSelection : NetworkBehaviour
     public GameObject DeckSelectionUI;
     public PlayerManager PlayerManager;
 
+    public string DeckTag;
+
     public void OnSelected()
     {
         NetworkIdentity networkIdentity = NetworkClient.connection.identity;
         PlayerManager = networkIdentity.GetComponent<PlayerManager>();
-        PlayerManager.CmdDeckSelection();
+        PlayerManager.CmdDeckSelection(DeckTag);
         
         DeckSelectionUI = GameObject.Find("DeckSelectionUI");
         Destroy(DeckSelectionUI);

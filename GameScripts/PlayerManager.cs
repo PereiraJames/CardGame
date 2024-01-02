@@ -375,17 +375,17 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdDeckSelection()
+    public void CmdDeckSelection(string DeckTag)
     {
-        RpcDeckSelection();
+        RpcDeckSelection(DeckTag);
     }
 
     [ClientRpc]
-    public void RpcDeckSelection()
+    public void RpcDeckSelection(string DeckTag)
     {
         int ranNum = Random.Range(0, PlayerDecks.Count);
         // string SelectedDeck = PlayerDecks[ranNum];
-        string SelectedDeck = "Chris";
+        string SelectedDeck = DeckTag;
 
         PlayerDecks.RemoveAt(ranNum);
 
