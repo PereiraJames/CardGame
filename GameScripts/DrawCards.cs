@@ -44,8 +44,8 @@ public class DrawCards : NetworkBehaviour
 
     void Endturn()
     {
-        PlayerManager.CmdEndTurn();
         PlayerManager.CmdDealCards(1, GameManager.PlayerDeck);
+        PlayerManager.CmdEndTurn();
     }
 
     // void ExecuteClick()

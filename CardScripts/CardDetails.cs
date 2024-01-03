@@ -10,6 +10,7 @@ public class CardDetails : NetworkBehaviour
     public int CardAttack = 1;
     public bool CanAttack = true;
     public int DoubloonCost = 1;
+    public int amountOfEachCard = 1;
 
     public string DeckTag;
 

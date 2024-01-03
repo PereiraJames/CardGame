@@ -109,25 +109,67 @@ public class PlayerManager : NetworkBehaviour
         {
             if(card.tag == "Cards")
             {
-                if(card.GetComponent<CardDetails>().DeckTag == "Keagan")
+                int amountOfEachCard = card.GetComponent<CardDetails>().amountOfEachCard;
+                for (int i = 0; i < amountOfEachCard; i++)
                 {
-                    KeaganDeck.Add(card);
+                    List<GameObject> PlayersDeck = new List<GameObject>();
+
+                    PlayersDeck = CmdWhichDeck(card.GetComponent<CardDetails>().DeckTag);
+
+                    PlayersDeck.Add(card);
+                    Debug.Log(card);
                 }
-                else if(card.GetComponent<CardDetails>().DeckTag == "Mark")
-                {
-                    MarkDeck.Add(card);
-                }
-                else if(card.GetComponent<CardDetails>().DeckTag == "Deion")
-                {
-                    DeionDeck.Add(card);
-                }
-                else if (card.GetComponent<CardDetails>().DeckTag == "Chris")
-                {
-                    ChrisDeck.Add(card);
-                }
-                Debug.Log(card);
             }
         }
+        Debug.Log("MarkDeckSize : " + MarkDeck.Count);
+        Debug.Log("ChrisDeckSize : " + ChrisDeck.Count);
+        Debug.Log("KeaganDeckSize : " + KeaganDeck.Count);
+        Debug.Log("DeionDeckSize : " + DeionDeck.Count);
+
+    }
+
+    public List<GameObject> CmdWhichDeck(string deckName)
+    {
+        if (deckName == "Mark")
+        {
+            return MarkDeck;
+        }
+        else if(deckName == "Keagan")
+        {
+            return KeaganDeck;
+        }
+        else if (deckName == "Chris")
+        {
+            return ChrisDeck;
+        }
+        else if (deckName == "Deion")
+        {
+            return DeionDeck;
+        }
+        else
+        {
+            return cards;
+        }
+    }
+
+    [Command]
+    public void CmdRemoveCardFromDeck(GameObject card, List<GameObject> deck)
+    {
+        RpcRemoveCardFromDeck(card, deck);
+    }
+
+    [ClientRpc]
+    public void RpcRemoveCardFromDeck(GameObject card, List<GameObject> deck)
+    {
+        if(isOwned)
+        {
+            GameManager.PlayerDeckSize -= 1;
+        }
+        else
+        {
+            GameManager.EnemyDeckSize -= 1;
+        }
+        deck.Remove(card);
     }
 
     [Server]
@@ -140,39 +182,16 @@ public class PlayerManager : NetworkBehaviour
     public void CmdDealCards(int cardAmount, string deckName)
     {
         List <GameObject> deck = new List <GameObject>();
-        if(deckName == "Keagan")
-        {
-            deck = KeaganDeck;
-        }
-        else if (deckName == "Mark")
-        {
-            deck = MarkDeck;
-        }
-        else if (deckName == "Chris")
-        {
-            deck = ChrisDeck;
-        }
-        else if (deckName == "Deion")
-        {
-            deck = DeionDeck;
-        }
-
+        deck = CmdWhichDeck(deckName);
+        Debug.Log("isOwned :" + isOwned);
+        
         for (int i = 0; i < cardAmount; i++)
         {
-            if(GameManager.PlayerHandSize < 8)
-            {
-                foreach(GameObject xor in deck)
-                {
-                    Debug.Log(xor);
-                }
-                GameObject card = Instantiate(deck[Random.Range(0,deck.Count)], new Vector3(0,0,0), Quaternion.identity);
-                NetworkServer.Spawn(card, connectionToClient);
-                RpcShowCard(card, "Dealt");
-                if(isOwned)
-                {
-                    GameManager.PlayerHandSize++;
-                }
-            }
+            GameObject card = Instantiate(deck[Random.Range(0,deck.Count)], new Vector3(0,0,0), Quaternion.identity);
+            NetworkServer.Spawn(card, connectionToClient);
+            RpcShowCard(card, "Dealt");
+            GameManager.PlayerHandSize ++;
+            CmdRemoveCardFromDeck(card, deck);
         }
     }
 
@@ -215,6 +234,7 @@ public class PlayerManager : NetworkBehaviour
             {
                 card.transform.SetParent(PlayerSlot.transform, false); //Make sure its the right dropzone variable
                 CmdGMCardPlayed();
+                GameManager.PlayerHandSize --; 
             }
             if(!isOwned)
             {
@@ -291,15 +311,7 @@ public class PlayerManager : NetworkBehaviour
         }
         else 
         {
-            if(!isOwned)
-            {
-                Debug.Log("Is Not Owned");
-            }
-
-            else
-            {
-                Debug.Log("Error! RpcShowAttackDisplay");
-            }
+            Debug.Log("Error! RpcShowAttackDisplay");
         }
     }
 
@@ -383,11 +395,11 @@ public class PlayerManager : NetworkBehaviour
     [ClientRpc]
     public void RpcDeckSelection(string DeckTag)
     {
-        int ranNum = Random.Range(0, PlayerDecks.Count);
+        // int ranNum = Random.Range(0, PlayerDecks.Count);
         // string SelectedDeck = PlayerDecks[ranNum];
         string SelectedDeck = DeckTag;
 
-        PlayerDecks.RemoveAt(ranNum);
+        // PlayerDecks.RemoveAt(ranNum);
 
         Debug.Log("RPCSelectedDeck: " + SelectedDeck);
         UIManager.SelectedDeck = SelectedDeck;

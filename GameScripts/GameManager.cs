@@ -6,7 +6,8 @@ using Mirror;
 public class GameManager : NetworkBehaviour
 {
     public UIManager UIManager;
-    public GameObject PlayerSlot;    
+    public GameObject PlayerSlot; 
+    public PlayerManager PlayerManager;   
     public int TurnOrder = 0;
     public string GameState = "Ready";
     public int PlayerHealth = 20;
@@ -113,6 +114,26 @@ public class GameManager : NetworkBehaviour
         // }
         UIManager.UpdatePlayerText();
     }
+
+    // public void DrawCard(int amount, List<GameObject> deck)
+    // {   
+    //     while (PlayerHandSize + amount > 8)
+    //     {
+    //         amount --;
+    //         if (amount = 0)
+    //         {
+    //             break;
+    //         }
+    //     }
+    //     if (amount > 0)
+    //     {
+    //         PlayerManager.CmdDealCards(amount, deck);
+    //     }
+    //     else
+    //     {
+    //         Debug.Log("Drawing No")
+    //     }
+    // }
 
     public void EndTurn()
     {

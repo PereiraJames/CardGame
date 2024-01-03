@@ -50,10 +50,6 @@ public class CardAttack : NetworkBehaviour
         {
             PlayerManager.CmdShowAttackDisplay("CloseDisplay");
         }
-        else
-        {
-            Debug.Log("Lol");
-        }
     }
 
     // public void AttackDisplay(int state)

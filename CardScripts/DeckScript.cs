@@ -26,11 +26,11 @@ public class DeckScript : NetworkBehaviour
             child.GetComponentInChildren<Text>().enabled = true;
             if(gameObject == GameObject.Find("PlayerDeckUI"))
             {
-                child.GetComponentInChildren<Text>().text = "Player Deck Size: " + GameManager.PlayerDeckSize;
+                child.GetComponentInChildren<Text>().text = "Cards Left: " + GameManager.PlayerDeckSize;
             }
             else if (gameObject == GameObject.Find("EnemyDeckUI"))
             {
-                child.GetComponentInChildren<Text>().text = "Enemy Deck Size: " + GameManager.EnemyDeckSize;
+                child.GetComponentInChildren<Text>().text = "Cards Left: " + GameManager.EnemyDeckSize;
             }
         }
     }
