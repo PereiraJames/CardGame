@@ -7,6 +7,7 @@ using Mirror;
 public class DeckScript : NetworkBehaviour
 {
     public GameManager GameManager;
+    public PlayerManager PlayerManager;
 
     void Start()
     {
@@ -22,15 +23,18 @@ public class DeckScript : NetworkBehaviour
     {
         foreach (Transform child in gameObject.GetComponentInChildren<Transform>())
         {
+            NetworkIdentity networkIdentity = NetworkClient.connection.identity;
+            PlayerManager = networkIdentity.GetComponent<PlayerManager>();
+
             child.GetComponent<Image>().enabled = true;
             child.GetComponentInChildren<Text>().enabled = true;
             if(gameObject == GameObject.Find("PlayerDeckUI"))
             {
-                child.GetComponentInChildren<Text>().text = "Cards Left: " + GameManager.PlayerDeckSize;
+                child.GetComponentInChildren<Text>().text = "Cards Left: " + PlayerManager.CmdWhichDeck(GameManager.PlayerDeck).Count;
             }
             else if (gameObject == GameObject.Find("EnemyDeckUI"))
             {
-                child.GetComponentInChildren<Text>().text = "Cards Left: " + GameManager.EnemyDeckSize;
+                child.GetComponentInChildren<Text>().text = "Cards Left: " + PlayerManager.CmdWhichDeck(GameManager.EnemyDeck).Count;
             }
         }
     }

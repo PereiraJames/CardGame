@@ -30,6 +30,7 @@ public class GameManager : NetworkBehaviour
     private int ReadyClicks = 0;
 
     public string PlayerDeck;
+    public string EnemyDeck;
 
     // Start is called before the first frame update
     void Start()
