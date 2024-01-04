@@ -21,8 +21,6 @@ public class UIManager : NetworkBehaviour
 
     public Sprite KeaganImage, MarkImage, ChrisImage, DeionImage;
 
-    public string SelectedDeck;
-
     public GameObject Canvas;
     public GameObject WinDisplay;
 

@@ -14,11 +14,6 @@ public class DeckScript : NetworkBehaviour
         GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
-    public void UpdateDeckSize(int amount)
-    {
-        GameManager.PlayerDeckSize -= amount;
-    }
-
     public void OnHoverEnter()
     {
         foreach (Transform child in gameObject.GetComponentInChildren<Transform>())
@@ -30,11 +25,11 @@ public class DeckScript : NetworkBehaviour
             child.GetComponentInChildren<Text>().enabled = true;
             if(gameObject == GameObject.Find("PlayerDeckUI"))
             {
-                child.GetComponentInChildren<Text>().text = "Cards Left: " + PlayerManager.CmdWhichDeck(GameManager.PlayerDeck).Count;
+                child.GetComponentInChildren<Text>().text = "Cards Left: " + GameManager.PlayerDeckSize;
             }
             else if (gameObject == GameObject.Find("EnemyDeckUI"))
             {
-                child.GetComponentInChildren<Text>().text = "Cards Left: " + PlayerManager.CmdWhichDeck(GameManager.EnemyDeck).Count;
+                child.GetComponentInChildren<Text>().text = "Cards Left: " + GameManager.EnemyDeckSize;
             }
         }
     }
