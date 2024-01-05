@@ -53,6 +53,9 @@ public class PlayerManager : NetworkBehaviour
 
     public int CardsPlayed = 0;
 
+    [SyncVar]
+    public int PlayersReady = 0;
+
     public bool IsMyTurn = false;
 
     public List <string> PlayerDecks = new List<string>() {"Keagan", "Mark", "Deion", "Chris"};
@@ -440,7 +443,7 @@ public class PlayerManager : NetworkBehaviour
     public void RpcDeckSelection(string DeckTag)
     {
         string SelectedDeck = DeckTag;
-        
+
         Debug.Log("RPCSelectedDeck: " + SelectedDeck);
 
         if (isOwned)
@@ -529,6 +532,21 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [Command]
+    public void CmdDestoryDeckSelectionUI(bool bothPlayersReady)
+    {
+        RpcDestroyDeckSelectionUI(bothPlayersReady);
+    }
+
+    [ClientRpc]
+    public void RpcDestroyDeckSelectionUI(bool bothPlayersReady)
+    {
+        if(bothPlayersReady == true)
+        {
+            Destroy(GameObject.Find("DeckSelectionUI"));
+        }
+    }
+
+    [Command]
     public void CmdAttackingDetails(GameObject target, int targetNum)
     {
         RpcAttackingDetails(target, targetNum);
@@ -547,8 +565,10 @@ public class PlayerManager : NetworkBehaviour
             AttackingTarget = target;
             Debug.Log("Attacking Target: " + AttackingTarget);
         }
+        
+        AttackingTarget.GetComponent<CardDetails>().DealAttack();
 
-        AttackingTarget.GetComponent<CardAttack>().DealAttack();
+        // AttackingTarget.GetComponent<CardAttack>().DealAttack();
     }
 
     [Command]
@@ -560,22 +580,40 @@ public class PlayerManager : NetworkBehaviour
     [ClientRpc]
     public void RpcCardAttack()
     {
-        int AttackDamage;
-        int EnemyHealth;
+        int PlayerAttackDamage;
+        int PlayerCardHealth;
 
-        AttackDamage = AttackingTarget.GetComponent<CardDetails>().GetCardAttack();
-        EnemyHealth = AttackedTarget.GetComponent<CardDetails>().GetCardHealth();
+        int EnemyCardHealth;
+        int EnemyAttackDamage;
 
-        EnemyHealth -= AttackDamage;
-        AttackedTarget.GetComponent<CardDetails>().SetCardHealth(EnemyHealth);
+        PlayerAttackDamage = AttackingTarget.GetComponent<CardDetails>().GetCardAttack();
+        PlayerCardHealth = AttackingTarget.GetComponent<CardDetails>().GetCardHealth();
+
+        EnemyAttackDamage = AttackedTarget.GetComponent<CardDetails>().GetCardAttack();
+        EnemyCardHealth = AttackedTarget.GetComponent<CardDetails>().GetCardHealth();
+
+        PlayerCardHealth -= EnemyAttackDamage;
+        EnemyCardHealth -= PlayerAttackDamage;
+        AttackedTarget.GetComponent<CardDetails>().SetCardHealth(EnemyCardHealth);
         AttackedTarget.GetComponent<CardDetails>().UpdateCardText();
         AttackingTarget.GetComponent<CardDetails>().AttackTurn(false);
-        if(EnemyHealth < 1)
+
+        AttackingTarget.GetComponent<CardDetails>().SetCardHealth(PlayerCardHealth);
+        AttackingTarget.GetComponent<CardDetails>().UpdateCardText();
+
+        if(EnemyCardHealth < 1)
         {
             AttackedTarget.GetComponent<CardZoom>().OnHoverExit();
             Debug.Log("RPCardAttack(): " + gameObject);
             Destroy(AttackedTarget);
         }
+        if(PlayerCardHealth < 1)
+        {
+            AttackingTarget.GetComponent<CardZoom>().OnHoverExit();
+            Debug.Log("RPCardAttack(): " + gameObject);
+            Destroy(AttackingTarget);
+        }        
+        
         AttackingTarget = null;
         AttackedTarget = null;
     }

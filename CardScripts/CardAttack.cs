@@ -29,110 +29,71 @@ public class CardAttack : NetworkBehaviour
         PlayerManager = networkIdentity.GetComponent<PlayerManager>();
     }
 
-    public void AttackTarget()
-    {
-        if (PlayerManager.IsMyTurn && isOwned && gameObject.GetComponent<CardDetails>().IsAbleToAttack()) //Must be on players turn, player must have authourity of card and the card must be able to attack
-        {
-            if (!PlayerManager.AttackBeingMade) //checks if attack is currently being made
-            {   
-                if(transform.parent == RectPlayerSlot) //This checks if card is in the PlayerSlot
-                {
-                    PlayerManager.CmdAttackingDetails(gameObject, 0);
-                    PlayerManager.CmdShowAttackDisplay("OpenDisplay");
-                }
-            }
-            else
-            {
-                PlayerManager.CmdShowAttackDisplay("CloseDisplay");
-            }
-        }
-        else if(PlayerManager.IsMyTurn && PlayerManager.AttackDisplayOpened && isOwned) 
-        {
-            PlayerManager.CmdShowAttackDisplay("CloseDisplay");
-        }
-    }
-
-    // public void AttackDisplay(int state)
+    // public void AttackTarget()
     // {
-    //     if (!PlayerManager.AttackBeingMade && state == 1)
+    //     if (PlayerManager.IsMyTurn && isOwned && gameObject.GetComponent<CardDetails>().IsAbleToAttack()) //Must be on players turn, player must have authourity of card and the card must be able to attack
     //     {
-    //         Debug.Log("OpenedDisplay");
-    //         PlayerManager.AttackDisplayOpened = true;
-    //         if (EnemyPlayedCards.Count > 0)
-    //         {
-    //             foreach (GameObject card in EnemyPlayedCards)
+    //         if (!PlayerManager.AttackBeingMade) //checks if attack is currently being made
+    //         {   
+    //             if(transform.parent == RectPlayerSlot) //This checks if card is in the PlayerSlot
     //             {
-    //                 card.transform.SetParent(AttackingDisplay.transform, false);
+    //                 PlayerManager.CmdAttackingDetails(gameObject, 0);
+    //                 PlayerManager.CmdShowAttackDisplay("OpenDisplay");
     //             }
     //         }
     //         else
     //         {
-    //             Debug.Log("EnemyPlayedCards is empty");
+    //             PlayerManager.CmdShowAttackDisplay("CloseDisplay");
     //         }
-    //         EnemyPlayedCards.Clear();
     //     }
-    //     else if (state == 0)
+    //     else if(PlayerManager.IsMyTurn && PlayerManager.AttackDisplayOpened && isOwned) 
     //     {
-    //         EnemyPlayedCards.Clear();
-    //         foreach (Transform child in AttackingDisplay.GetComponentsInChildren<Transform>())
-    //         {
-    //             if (child.gameObject.tag == "Cards")
-    //             {
-    //                 EnemyPlayedCards.Add(child.gameObject);
-    //             }
-    //         }
-    //         foreach (GameObject card in EnemyPlayedCards)
-    //         { 
-    //             card.transform.SetParent(EnemySlot.transform, false);
-    //         }
-    //         Debug.Log("ClosedDisplay");
-    //         PlayerManager.AttackBeingMade = false;
-    //         PlayerManager.DestroyBeingMade = false;
-    //         PlayerManager.AttackDisplayOpened = false;
+    //         PlayerManager.CmdShowAttackDisplay("CloseDisplay");
     //     }
     // }
 
-    public void SelectedTarget() //In perspective of selected target
-    {
-        if(PlayerManager.AttackDisplayOpened)
-        {
-            if(PlayerManager.AttackBeingMade && PlayerManager.AttackingTarget != null && !isOwned)
-            {
-                if(gameObject != PlayerManager.AttackingTarget)
-                {
-                    PlayerManager.CmdAttackingDetails(gameObject, 1); 
-                }
-            }
-            else if(PlayerManager.DestroyBeingMade && !isOwned)
-            {
-                Debug.Log("Destroying: " + gameObject);
-                PlayerManager.CmdDestroyTarget(gameObject); 
-                PlayerManager.CmdShowAttackDisplay("CloseDisplay");
-                PlayerManager.DestroyBeingMade = false;
-            }
-            else
-            {
-                Debug.Log("DestroyBeingMade " + PlayerManager.DestroyBeingMade + " AttackBeingMade " + PlayerManager.AttackBeingMade);
-            }
-        }
-    }
 
-    public void DealAttack()
-    {
-        if(PlayerManager.AttackedTarget != null && PlayerManager.AttackBeingMade && gameObject.GetComponent<CardDetails>().IsAbleToAttack())
-        {
-            if(PlayerManager.IsMyTurn)
-            {
-                PlayerManager.CmdCardAttack();
-                PlayerManager.CmdShowAttackDisplay("CloseDisplay");
-            }
-        }
-    }
+    // public void SelectedTarget() //In perspective of selected target
+    // {
+    //     if(PlayerManager.AttackDisplayOpened)
+    //     {
+    //         if(PlayerManager.AttackBeingMade && PlayerManager.AttackingTarget != null && !isOwned)
+    //         {
+    //             if(gameObject != PlayerManager.AttackingTarget)
+    //             {
+    //                 PlayerManager.CmdAttackingDetails(gameObject, 1); 
+    //             }
+    //         }
+    //         else if(PlayerManager.DestroyBeingMade && !isOwned)
+    //         {
+    //             Debug.Log("Destroying: " + gameObject);
+    //             PlayerManager.CmdDestroyTarget(gameObject); 
+    //             PlayerManager.CmdShowAttackDisplay("CloseDisplay");
+    //             PlayerManager.DestroyBeingMade = false;
+    //         }
+    //         else
+    //         {
+    //             Debug.Log("DestroyBeingMade " + PlayerManager.DestroyBeingMade + " AttackBeingMade " + PlayerManager.AttackBeingMade);
+    //         }
+    //     }
+    // }
 
-    public void DestroyTarget()
-    {
-        Debug.Log("Destroy");
-        PlayerManager.DestroyBeingMade = true;
-        PlayerManager.CmdShowAttackDisplay("OpenDisplay");
-    }
+    // public void DealAttack()
+    // {
+    //     if(PlayerManager.AttackedTarget != null && PlayerManager.AttackBeingMade && gameObject.GetComponent<CardDetails>().IsAbleToAttack())
+    //     {
+    //         if(PlayerManager.IsMyTurn)
+    //         {
+    //             PlayerManager.CmdCardAttack();
+    //             PlayerManager.CmdShowAttackDisplay("CloseDisplay");
+    //         }
+    //     }
+    // }
+
+    // public void DestroyTarget()
+    // {
+    //     Debug.Log("Destroy");
+    //     PlayerManager.DestroyBeingMade = true;
+    //     PlayerManager.CmdShowAttackDisplay("OpenDisplay");
+    // }
 }

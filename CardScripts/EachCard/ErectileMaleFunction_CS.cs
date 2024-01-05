@@ -6,7 +6,9 @@ public class ErectileMaleFunction_CS : CardAbilities
 {
     public override void OnEntry()
     {
-        gameObject.GetComponent<CardAttack>().DestroyTarget();
+        gameObject.GetComponent<CardDetails>().DestroyTarget();
+
+        // gameObject.GetComponent<CardAttack>().DestroyTarget();
         Debug.Log("OnE");
     }
 

@@ -39,21 +39,21 @@ public class CardHighlight : MonoBehaviour
         // }
     }
 
-    public bool isDrag()
-    {
-        return gameObject.GetComponent<DragDrop>().isDragging;
-    }
+    // public bool isDrag()
+    // {
+    //     return gameObject.GetComponent<DragDrop>().isDragging;
+    // }
 
-    public void CardHover()
-    {
+    // public void CardHover()
+    // {
         
-        gameObject.GetComponent<Outline>().effectColor = Color.blue;
-        gameObject.GetComponent<Outline>().effectDistance = new Vector2(10,10);
-    }
+    //     gameObject.GetComponent<Outline>().effectColor = Color.blue;
+    //     gameObject.GetComponent<Outline>().effectDistance = new Vector2(10,10);
+    // }
 
-    public void CardUnHover()
-    {
-        gameObject.GetComponent<Outline>().effectColor = Color.red;
-        gameObject.GetComponent<Outline>().effectDistance = new Vector2(1,1);
-    }
+    // public void CardUnHover()
+    // {
+    //     gameObject.GetComponent<Outline>().effectColor = Color.red;
+    //     gameObject.GetComponent<Outline>().effectDistance = new Vector2(1,1);
+    // }
 }
