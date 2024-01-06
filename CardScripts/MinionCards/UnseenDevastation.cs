@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class PlainCard_CS : CardAbilities
+public class UnseenDevastation : CardAbilities
 {
     public override void OnEntry()
     {
-        Debug.Log("PlainCard");
+        PlayerManager.CmdUpdateDoubloons(3, true);
     }
 
-    public override void OnExecute()
+    public override void OnEndTurn()
     {
-        Debug.Log("");
+        
     }
 
     public override void OnSpecial()
     {
-        Debug.Log("");
+        
     }
 }

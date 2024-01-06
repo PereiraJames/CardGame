@@ -21,13 +21,13 @@ public class Mama_CS : CardAbilities
         }    
     }
 
-    public override void OnExecute()
+    public override void OnEndTurn()
     {
-        Debug.Log("");
+     
     }
 
     public override void OnSpecial()
     {
-        Debug.Log("");
+
     }
 }

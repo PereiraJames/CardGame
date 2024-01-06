@@ -15,7 +15,7 @@ public abstract class CardAbilities : NetworkBehaviour
 
     public abstract void OnEntry();
 
-    public abstract void OnExecute();
+    public abstract void OnEndTurn();
 
     public abstract void OnSpecial();
 }

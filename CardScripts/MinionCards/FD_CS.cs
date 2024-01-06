@@ -11,13 +11,13 @@ public class FD_CS : CardAbilities
         PlayerManager.CmdGMEnemyHealth(-1);
     }
 
-    public override void OnExecute()
+    public override void OnEndTurn()
     {
-        PlayerManager.CmdChangeBP(2,1);
+     
     }
 
     public override void OnSpecial()
     {
-        Debug.Log("ATTACKED!");
+
     }
 }

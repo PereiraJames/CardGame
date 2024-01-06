@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class UnstableOrge_CS : CardAbilities
+public class MisguidedAssault : CardAbilities
 {
     public override void OnEntry()
     {
-        GameObject PlayerSlot = PlayerManager.PlayerSlot;
+        PlayerManager.CmdGMPlayerHealth(-3);
+        GameObject EnemySlot = PlayerManager.EnemySlot;
 
-        foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
+        foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
         {
             if (child.gameObject.tag == "Cards")
             {
@@ -17,13 +19,13 @@ public class UnstableOrge_CS : CardAbilities
         }
     }
 
-    public override void OnExecute()
+    public override void OnEndTurn()
     {
-        PlayerManager.CmdChangeBP(2,1);
+        
     }
 
     public override void OnSpecial()
     {
-        Debug.Log(" ");
+        
     }
 }

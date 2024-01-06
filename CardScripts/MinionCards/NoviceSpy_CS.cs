@@ -1,24 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class ErectileMaleFunction_CS : CardAbilities
+public class NoviceSpy : CardAbilities
 {
     public override void OnEntry()
     {
         gameObject.GetComponent<CardDetails>().DestroyTarget();
-
-        // gameObject.GetComponent<CardAttack>().DestroyTarget();
-        Debug.Log("OnE");
     }
 
-    public override void OnExecute()
+    public override void OnEndTurn()
     {
-        PlayerManager.CmdChangeBP(2,1);
+     
     }
 
     public override void OnSpecial()
     {
-        Debug.Log(" ");
+
     }
 }

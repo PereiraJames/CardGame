@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class RS_CS : CardAbilities
+public class WellPaidButcher : CardAbilities
 {
     public override void OnEntry()
     {
-        PlayerManager.CmdGMEnemyHealth(-2);
+        PlayerManager.CmdUpdateDoubloons(3, true);
     }
 
-    public override void OnExecute()
+    public override void OnEndTurn()
     {
-        PlayerManager.CmdChangeBP(2,1);
+        
     }
 
     public override void OnSpecial()
     {
-        Debug.Log(" ");
+        
     }
 }

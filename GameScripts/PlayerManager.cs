@@ -371,6 +371,17 @@ public class PlayerManager : NetworkBehaviour
     [ClientRpc]
     public void RpcEndTurn()
     {
+        if(isOwned)
+        {
+            foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
+            {
+                if (child.gameObject.tag == "Cards")
+                {
+                    child.GetComponent<CardAbilities>().OnEndTurn();
+                }
+            }
+        }
+
         CmdShowAttackDisplay("CloseDisplay");
         PlayerManager pm = NetworkClient.connection.identity.GetComponent<PlayerManager>();
         pm.IsMyTurn = !pm.IsMyTurn;

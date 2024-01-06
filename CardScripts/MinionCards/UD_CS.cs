@@ -10,13 +10,13 @@ public class UD_CS : CardAbilities
         PlayerManager.CmdGMEnemyHealth(-10);
     }
 
-    public override void OnExecute()
+    public override void OnEndTurn()
     {
-        PlayerManager.CmdChangeBP(2,1);
+     
     }
 
     public override void OnSpecial()
     {
-        Debug.Log(" ");
+
     }
 }
