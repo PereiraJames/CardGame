@@ -41,5 +41,9 @@ public class DeckSelection : NetworkBehaviour
             }
             PlayerManager.CmdDestoryDeckSelectionUI(bothPlayersReady);
         }
+
+        //FOR TESTING!
+        // PlayerManager.CmdDestoryDeckSelectionUI(true);
+
     } 
 }
