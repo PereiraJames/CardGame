@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class UD_CS : CardAbilities
+
+public class CorporalOng_CS : CardAbilities
 {
     public override void OnEntry()
     {
-        PlayerManager.CmdGMEnemyHealth(-10);
+        return;
     }
 
     public override void OnEndTurn()
     {
-     
+        
     }
 
     public override void OnHit()
     {
-
+        PlayerManager.CmdDealCards(1,GameManager.PlayerDeck);
     }
     
     public override void OnLastResort()

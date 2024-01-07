@@ -15,8 +15,18 @@ public class PlainCard_CS : CardAbilities
      
     }
 
-    public override void OnSpecial()
+    public override void OnHit()
     {
 
+    }
+    
+    public override void OnLastResort()
+    {
+
+    }
+
+    public override void OnSilenced()
+    {
+        
     }
 }

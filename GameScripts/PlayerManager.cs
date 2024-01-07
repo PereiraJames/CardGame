@@ -294,6 +294,8 @@ public class PlayerManager : NetworkBehaviour
         {
             Debug.Log("ASJKASJKDNAJISBNDASBDJ");
         }
+
+        CmdUpdateAllCardText();
     }
 
     [Command]
@@ -520,10 +522,16 @@ public class PlayerManager : NetworkBehaviour
         Target.GetComponent<CardDetails>().SetCardHealth(Damage);
 
         int TargetHealth = Target.GetComponent<CardDetails>().GetCardHealth();
+        if(isOwned)
+        {
+            Target.GetComponent<CardAbilities>().OnHit(); 
+        }    
+        
         if(TargetHealth < 1)
         {
             Target.GetComponent<CardZoom>().OnHoverExit();
             Debug.Log("RPCDealDamage() : " + Target);
+            Target.GetComponent<CardAbilities>().OnLastResort();
             Destroy(Target);
         }
     }
@@ -539,6 +547,7 @@ public class PlayerManager : NetworkBehaviour
     {
         Target.GetComponent<CardZoom>().OnHoverExit();
         Debug.Log("RPCDestoryTarget: " + Target);
+        Target.GetComponent<CardAbilities>().OnLastResort();
         Destroy(Target);
     }
 
@@ -583,6 +592,18 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [Command]
+    public void CmdPermSetCardHealth(GameObject card, int newHealth)
+    {
+        RpcPermSetCardHealth(card, newHealth);
+    }
+
+    [ClientRpc]
+    public void RpcPermSetCardHealth(GameObject card, int newHealth)
+    {
+        card.GetComponent<CardDetails>().PermSetCardHealth(newHealth);
+    }
+
+    [Command]
     public void CmdCardAttack()
     {
         RpcCardAttack();
@@ -611,17 +632,22 @@ public class PlayerManager : NetworkBehaviour
 
         AttackingTarget.GetComponent<CardDetails>().SetCardHealth(PlayerCardHealth);
         AttackingTarget.GetComponent<CardDetails>().UpdateCardText();
+        
+        AttackingTarget.GetComponent<CardAbilities>().OnHit();
+        AttackedTarget.GetComponent<CardAbilities>().OnHit();
 
         if(EnemyCardHealth < 1)
         {
             AttackedTarget.GetComponent<CardZoom>().OnHoverExit();
             Debug.Log("RPCardAttack(): " + gameObject);
+            AttackedTarget.GetComponent<CardAbilities>().OnLastResort();
             Destroy(AttackedTarget);
         }
         if(PlayerCardHealth < 1)
         {
             AttackingTarget.GetComponent<CardZoom>().OnHoverExit();
             Debug.Log("RPCardAttack(): " + gameObject);
+            AttackingTarget.GetComponent<CardAbilities>().OnLastResort();
             Destroy(AttackingTarget);
         }        
         
@@ -687,5 +713,77 @@ public class PlayerManager : NetworkBehaviour
     public void RpcGMPEnemyHealth(int health)
     {
         GameManager.AdjustEnemyHealth(health, isOwned);
+    }
+
+    [Command]
+    public void CmdUpdateAllCardText()
+    {
+        RpcUpdateAllCardText();
+    }
+
+    [ClientRpc]
+    public void RpcUpdateAllCardText()
+    {
+        foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
+        {
+            if (child.gameObject.tag == "Cards")
+            {
+                child.GetComponent<CardDetails>().UpdateCardText();
+            }
+        }
+
+        foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
+        {
+            if (child.gameObject.tag == "Cards")
+            {
+                child.GetComponent<CardDetails>().UpdateCardText();
+            }
+        }
+    }
+
+    [Command]
+    public void CmdSummonMinion(int health, int attack, bool forPlayer)
+    {
+        GameObject card = Instantiate(cards[0], new Vector3(0,0,0), Quaternion.identity);
+        NetworkServer.Spawn(card, connectionToClient);
+        card.GetComponent<CardDetails>().SetCardHealth(health);
+        card.GetComponent<CardDetails>().SetCardAttack(attack);
+        RpcSummonMinion(forPlayer, card);
+    }
+
+    [ClientRpc]
+    public void RpcSummonMinion(bool forPlayer, GameObject card)
+    {
+        if(isOwned)
+        {
+            if(forPlayer)
+            {
+                card.GetComponent<CardDetails>().UpdateCardText();
+                card.transform.SetParent(PlayerSlot.transform, false);
+                Debug.Log("A");
+            }
+            else
+            {
+                card.GetComponent<CardDetails>().UpdateCardText();
+                card.transform.SetParent(EnemySlot.transform, false);
+                Debug.Log("B");
+            }
+        }
+        else
+        {
+            if(forPlayer)
+            {
+                card.GetComponent<CardDetails>().UpdateCardText();
+                card.transform.SetParent(EnemySlot.transform, false);
+                Debug.Log("C");
+
+            }
+            else
+            {
+                card.GetComponent<CardDetails>().UpdateCardText();
+                card.transform.SetParent(PlayerSlot.transform, false);
+                Debug.Log("D");
+            }
+        }
     }
 }

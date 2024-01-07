@@ -52,9 +52,19 @@ public class CardDetails : NetworkBehaviour
         CardHealth -= DamageDone;
     }
 
+    public void PermSetCardHealth(int newHealth)
+    {
+        CardHealth = newHealth;
+    }
+
     public int GetCardAttack()
     {
         return CardAttack;
+    }
+
+    public void SetCardAttack(int attackAmount)
+    {
+        CardAttack = attackAmount;
     }
 
     public bool IsAbleToAttack()

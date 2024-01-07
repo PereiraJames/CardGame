@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
 
-public class UD_CS : CardAbilities
+public class BoostedAccount_CS : CardAbilities
 {
     public override void OnEntry()
     {
-        PlayerManager.CmdGMEnemyHealth(-10);
+        PlayerManager.CmdSummonMinion(2,2,true);
     }
 
     public override void OnEndTurn()
     {
-     
+        
     }
 
     public override void OnHit()

@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class UD_CS : CardAbilities
+
+public class AnnoyedFucker_CS : CardAbilities
 {
     public override void OnEntry()
     {
-        PlayerManager.CmdGMEnemyHealth(-10);
+        return;
     }
 
     public override void OnEndTurn()
     {
-     
+        PlayerManager.CmdSummonMinion(1,1,true);
     }
 
     public override void OnHit()

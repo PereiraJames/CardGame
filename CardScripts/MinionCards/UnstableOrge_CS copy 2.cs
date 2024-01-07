@@ -22,8 +22,18 @@ public class UnstableOrge_CS : CardAbilities
         
     }
 
-    public override void OnSpecial()
+    public override void OnHit()
     {
-        Debug.Log(" ");
+
+    }
+    
+    public override void OnLastResort()
+    {
+
+    }
+
+    public override void OnSilenced()
+    {
+        
     }
 }

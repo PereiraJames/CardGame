@@ -8,24 +8,45 @@ public class TheonSlothBorne_CS : CardAbilities
 {
     public override void OnEntry()
     {
-        Debug.Log("");
-    }
-
-    public override void OnEndTurn()
-    {
         GameObject EnemySlot = PlayerManager.EnemySlot;
+        GameObject PlayerSlot = PlayerManager.PlayerSlot;
+
+        int amountofPlayerCards = 0;
+
+        foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
+        {
+            if (child.gameObject.tag == "Cards")
+            {
+                amountofPlayerCards++;
+            }
+        } 
 
         foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
         {
             if (child.gameObject.tag == "Cards")
             {
-                PlayerManager.CmdDealDamage(child.gameObject, 1);
+                PlayerManager.CmdDealDamage(child.gameObject, amountofPlayerCards);
             }
         } 
     }
 
-    public override void OnSpecial()
+    public override void OnEndTurn()
+    {
+        
+    }
+
+    public override void OnHit()
     {
 
+    }
+    
+    public override void OnLastResort()
+    {
+
+    }
+
+    public override void OnSilenced()
+    {
+        
     }
 }

@@ -3,36 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class UnseenDevastation : CardAbilities
+public class MisguidedArtillerist_CS : CardAbilities
 {
     public override void OnEntry()
     {
-       GameObject EnemySlot = PlayerManager.EnemySlot;
-       GameObject PlayerSlot = PlayerManager.PlayerSlot;
+        GameObject EnemySlot = PlayerManager.EnemySlot;
+        GameObject PlayerSlot = PlayerManager.PlayerSlot;
 
         foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
         {
             if (child.gameObject.tag == "Cards")
             {
-                if(child.GetComponent<CardDetails>().GetCardHealth() < 5)
-                {
-                    Destroy(child);
-                }
+                PlayerManager.CmdDealDamage(child.gameObject, 1);
             }
         }
+
         foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
         {
             if (child.gameObject.tag == "Cards")
             {
-                if (child.gameObject != gameObject)
-                {
-                    if(child.GetComponent<CardDetails>().GetCardHealth() < 5)
-                    {
-                        Destroy(child.gameObject);
-                    }
-                }
+                PlayerManager.CmdDealDamage(child.gameObject, 1);
             }
         }
+
     }
 
     public override void OnEndTurn()
