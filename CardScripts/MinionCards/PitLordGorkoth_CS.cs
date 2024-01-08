@@ -37,7 +37,7 @@ public class PitLordGorkoth_CS : CardAbilities
             }
         }
 
-        PlayerManager.CmdDealCards(totalDead, GameManager.PlayerDeck);
+        PlayerManager.CmdDealCards(totalDead, GameManager.PlayerDeck, true);
 
     }
 

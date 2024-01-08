@@ -231,25 +231,24 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdDealCards(int cardAmount, string deckName)
+    public void CmdDealCards(int cardAmount, string deckName, bool forPlayer)
     {
         for (int i = 0; i < cardAmount; i++)
         {
             List<GameObject> deck = CmdWhichDeck(deckName);
             if(deck.Count != 0)
             {
-                Debug.Log("Current DeckSize: " + deck.Count);
                 int ranNum = Random.Range(0,deck.Count - 1);
                 GameObject card = Instantiate(deck[ranNum], new Vector3(0,0,0), Quaternion.identity);
                 NetworkServer.Spawn(card, connectionToClient);
                 if (isOwned && GameManager.PlayerHandSize + 1 < 8)
                 {
-                    RpcSetParentCard(card);
+                    RpcSetParentCard(card, forPlayer);
                     deck.RemoveAt(ranNum);
                 }
                 else if (!isOwned && GameManager.PlayerHandSize + 1 < 8)
                 {
-                    RpcSetParentCard(card);
+                    RpcSetParentCard(card, forPlayer);
                     deck.RemoveAt(ranNum);
                 }
                 else
@@ -262,18 +261,35 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    void RpcSetParentCard(GameObject card)
+    void RpcSetParentCard(GameObject card, bool forPlayer)
     {
-        if(isOwned)
+        if(forPlayer)
         {
-            card.transform.SetParent(PlayerArea.transform, false);
-            GameManager.PlayerDeckSize --;
+            if(isOwned)
+            {
+                card.transform.SetParent(PlayerArea.transform, false);
+                GameManager.PlayerDeckSize --;
+            }
+            else
+            {
+                card.transform.SetParent(EnemyArea.transform, false);
+                card.GetComponent<CardFlipper>().Flip();
+                GameManager.EnemyDeckSize --;
+            }
         }
         else
         {
-            card.transform.SetParent(EnemyArea.transform, false);
-            card.GetComponent<CardFlipper>().Flip();
-            GameManager.EnemyDeckSize --;
+            if(isOwned)
+            {
+                card.transform.SetParent(EnemyArea.transform, false);
+                card.GetComponent<CardFlipper>().Flip();
+                GameManager.EnemyDeckSize --;
+            }
+            else
+            {
+                card.transform.SetParent(PlayerArea.transform, false);
+                GameManager.PlayerDeckSize --;
+            }
         }
     }
 
@@ -469,22 +485,22 @@ public class PlayerManager : NetworkBehaviour
 
     }
 
-    [Command]
-    public void CmdGMChangeState(string stateRequest)
-    {
-        RpcGMChangeState(stateRequest);
-    }
+    // [Command]
+    // public void CmdGMChangeState(string stateRequest)
+    // {
+    //     RpcGMChangeState(stateRequest);
+    // }
 
 
-    [ClientRpc]
-    void RpcGMChangeState(string stateRequest)
-    {
-        GameManager.ChangeGameState(stateRequest);
-        if (stateRequest == "End Turn")
-        {
-            GameManager.ChangeReadyClicks();
-        }
-    }
+    // [ClientRpc]
+    // void RpcGMChangeState(string stateRequest)
+    // {
+    //     GameManager.ChangeGameState(stateRequest);
+    //     if (stateRequest == "End Turn")
+    //     {
+    //         GameManager.ChangeReadyClicks();
+    //     }
+    // }
 
     [Command]
     void CmdGMCardPlayed()
@@ -616,6 +632,9 @@ public class PlayerManager : NetworkBehaviour
         if(bothPlayersReady == true)
         {
             Destroy(GameObject.Find("DeckSelectionUI"));
+            CmdDealCards(5, GameManager.PlayerDeck, true);
+            CmdDealCards(5, GameManager.EnemyDeck, false);
+            GameManager.HighLightStart();
         }
     }
 

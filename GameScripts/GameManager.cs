@@ -8,7 +8,6 @@ public class GameManager : NetworkBehaviour
     public UIManager UIManager;
     public GameObject PlayerSlot; 
     public PlayerManager PlayerManager;   
-    public int TurnOrder = 0;
     public string GameState = "Ready";
     public int PlayerHealth = 20;
     public int EnemyHealth = 20;
@@ -49,38 +48,37 @@ public class GameManager : NetworkBehaviour
 
     }
 
-    public void ChangeGameState(string stateRequest)
-    {
-        if (stateRequest == "Initialize {}")
-        {
-            ReadyClicks = 0;
-            GameState = "Initialize {}";
-        }
-        else if (stateRequest == "End Turn")
-        {
-            if (ReadyClicks == 1)
-            {
-                GameState = "End Turn";
-                UIManager.HighlightTurn(TurnOrder);
-            }
-        }
-        else if (stateRequest == "Execute {}")
-        {
-            GameState = "Execute {}";
-            TurnOrder = 0;
-        }
-        UIManager.UpdateButtonText(GameState);
-    }
+    // public void ChangeGameState(string stateRequest)
+    // {
+    //     if (stateRequest == "Initialize {}")
+    //     {
+    //         ReadyClicks = 0;
+    //         GameState = "Initialize {}";
+    //     }
+    //     else if (stateRequest == "End Turn")
+    //     {
+    //         if (ReadyClicks == 1)
+    //         {
+    //             GameState = "End Turn";
+    //             UIManager.HighlightTurn(TurnOrder);
+    //         }
+    //     }
+    //     else if (stateRequest == "Execute {}")
+    //     {
+    //         GameState = "Execute {}";
+    //         TurnOrder = 0;
+    //     }
+    //     UIManager.UpdateButtonText(GameState);
+    // }
 
-    public void ChangeReadyClicks()
-    {
-        ReadyClicks++;
-    }
+    // public void ChangeReadyClicks()
+    // {
+    //     ReadyClicks++;
+    // }
 
     public void CardPlayed()
     {
-        TurnOrder++;
-        UIManager.HighlightTurn(TurnOrder);
+        UIManager.HighlightTurn();
 
         if(isOwned)
         {
@@ -136,10 +134,14 @@ public class GameManager : NetworkBehaviour
     //     }
     // }
 
+    public void HighLightStart()
+    {
+        UIManager.HighlightTurn();
+    }
+
     public void EndTurn()
     {
-        TurnOrder++;
-        UIManager.HighlightTurn(TurnOrder);
+        UIManager.HighlightTurn();
 
         foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
         {

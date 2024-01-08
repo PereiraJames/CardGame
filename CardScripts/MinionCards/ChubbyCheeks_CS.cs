@@ -20,7 +20,7 @@ public class ChubbyCheeks_CS : CardAbilities
     
     public override void OnLastResort()
     {
-        PlayerManager.CmdDealCards(1, GameManager.PlayerDeck);
+        PlayerManager.CmdDealCards(1, GameManager.PlayerDeck, true);
     }
 
     public override void OnSilenced()
