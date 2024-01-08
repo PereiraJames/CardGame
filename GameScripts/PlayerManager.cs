@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using Mirror;
 
 public class PlayerManager : NetworkBehaviour
@@ -115,7 +116,6 @@ public class PlayerManager : NetworkBehaviour
         Debug.Log("ChrisDeckSize : " + ChrisDeck.Count);
         Debug.Log("KeaganDeckSize : " + KeaganDeck.Count);
         Debug.Log("DeionDeckSize : " + DeionDeck.Count);
-
     }
 
     public int Decksize(string deckName)
@@ -188,6 +188,45 @@ public class PlayerManager : NetworkBehaviour
                     PlayersDeck.Add(card);
                 }
             }
+        }
+    }
+
+    [Command]
+    public void CmdClientStatus()
+    {
+        RpcClientStatus();
+    }
+
+    [ClientRpc]
+    public void RpcClientStatus()
+    {
+        Debug.Log("isServer: " + isServer + " isClient" + isClient);
+        if(NetworkServer.connections.Count == 1)
+        {
+            NetworkManager.singleton.StopServer();
+        }
+    }
+
+    [Command]
+    public void CmdConcedeGame()
+    {
+        RpcConcedeGame();
+    }
+
+    [ClientRpc]
+    public void RpcConcedeGame()
+    {
+        CmdGMPlayerHealth(-1000);
+        Debug.Log(NetworkServer.connections.Count);
+
+        if(isOwned)
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+
+        if(NetworkServer.connections.Count == 1)
+        {
+            NetworkManager.StopHost();
         }
     }
 
@@ -296,6 +335,19 @@ public class PlayerManager : NetworkBehaviour
         }
 
         CmdUpdateAllCardText();
+    }
+
+    [Command]
+    public void CmdRemoveConnectionUI()
+    {
+        RpcRemoveConnectionUI();
+    }
+
+    [ClientRpc]
+    public void RpcRemoveConnectionUI()
+    {
+        GameObject ConnectionScreenUI = GameObject.Find("ConnectionScreenUI");
+        Destroy(ConnectionScreenUI);
     }
 
     [Command]

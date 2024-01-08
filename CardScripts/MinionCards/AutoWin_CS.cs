@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RestlessWealth_CS : CardAbilities
+public class AutoWin_CS : CardAbilities
 {
     public override void OnEntry()
     {
-        PlayerManager.CmdUpdateDoubloons(2,true);
+        PlayerManager.CmdGMEnemyHealth(-50);
     }
 
     public override void OnEndTurn()
@@ -16,7 +16,7 @@ public class RestlessWealth_CS : CardAbilities
 
     public override void OnHit()
     {
-        
+
     }
     
     public override void OnLastResort()

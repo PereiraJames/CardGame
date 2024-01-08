@@ -229,10 +229,18 @@ public class GameManager : NetworkBehaviour
         if (isOwned)
         {
             PlayerHealth += health;
+            if (PlayerHealth <= 0)
+            {
+                UIManager.DisplayWin(false);
+            }
         }
         else
         {
             EnemyHealth += health;
+            if (EnemyHealth <= 0)
+            {
+                UIManager.DisplayWin(true);
+            }
         }
         UIManager.UpdatePlayerText();
     } 
@@ -242,10 +250,19 @@ public class GameManager : NetworkBehaviour
         if (isOwned)
         {
             EnemyHealth += health;
+            if(EnemyHealth <= 0)
+            {
+                UIManager.DisplayWin(true);
+            }
         }
         else
         {
             PlayerHealth += health;
+
+            if (PlayerHealth <= 0)
+            {
+                UIManager.DisplayWin(false);
+            }
         }
         UIManager.UpdatePlayerText();
     } 
