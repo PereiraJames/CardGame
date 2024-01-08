@@ -1,14 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
 
-
-public class CorporalOng_CS : CardAbilities
+public class Juggernut_CS : CardAbilities
 {
     public override void OnEntry()
     {
-        return;
+        PlayerManager.CmdSetPlayerHealth(5);
+        PlayerManager.CmdGMEnemyHealth(-5);
     }
 
     public override void OnEndTurn()
@@ -18,10 +17,7 @@ public class CorporalOng_CS : CardAbilities
 
     public override void OnHit()
     {
-        if(isOwned)
-        {
-            PlayerManager.CmdDealCards(1,GameManager.PlayerDeck);
-        }
+
     }
     
     public override void OnLastResort()

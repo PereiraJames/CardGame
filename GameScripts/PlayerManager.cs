@@ -240,8 +240,8 @@ public class PlayerManager : NetworkBehaviour
 
     public void PlayCard(GameObject card)
     {
-        card.GetComponent<CardAbilities>().OnEntry();
         CmdPlayCard(card);
+        card.GetComponent<CardAbilities>().OnEntry();
     }
 
     [Command]
@@ -522,6 +522,7 @@ public class PlayerManager : NetworkBehaviour
         Target.GetComponent<CardDetails>().SetCardHealth(Damage);
 
         int TargetHealth = Target.GetComponent<CardDetails>().GetCardHealth();
+        CmdUpdateAllCardText();
         if(isOwned)
         {
             Target.GetComponent<CardAbilities>().OnHit(); 
@@ -627,12 +628,12 @@ public class PlayerManager : NetworkBehaviour
         PlayerCardHealth -= EnemyAttackDamage;
         EnemyCardHealth -= PlayerAttackDamage;
         AttackedTarget.GetComponent<CardDetails>().SetCardHealth(EnemyCardHealth);
-        AttackedTarget.GetComponent<CardDetails>().UpdateCardText();
+        // AttackedTarget.GetComponent<CardDetails>().UpdateCardText();
         AttackingTarget.GetComponent<CardDetails>().AttackTurn(false);
 
         AttackingTarget.GetComponent<CardDetails>().SetCardHealth(PlayerCardHealth);
-        AttackingTarget.GetComponent<CardDetails>().UpdateCardText();
-        
+        // AttackingTarget.GetComponent<CardDetails>().UpdateCardText();
+
         AttackingTarget.GetComponent<CardAbilities>().OnHit();
         AttackedTarget.GetComponent<CardAbilities>().OnHit();
 
@@ -651,6 +652,8 @@ public class PlayerManager : NetworkBehaviour
             Destroy(AttackingTarget);
         }        
         
+        CmdUpdateAllCardText();
+
         AttackingTarget = null;
         AttackedTarget = null;
     }
@@ -689,6 +692,18 @@ public class PlayerManager : NetworkBehaviour
     public void RpcChangeBP(int playerBp, int enemyBp)
     {
         GameManager.ChangeBP(playerBp, enemyBp, isOwned);
+    }
+
+    [Command]
+    public void CmdSetPlayerHealth(int health)
+    {
+        RpcSetPlayerHealth(health);
+    }
+
+    [ClientRpc]
+    public void RpcSetPlayerHealth(int health)
+    {
+        GameManager.SetPlayerHealth(health, isOwned);
     }
 
     [Command]
@@ -746,25 +761,24 @@ public class PlayerManager : NetworkBehaviour
     {
         GameObject card = Instantiate(cards[0], new Vector3(0,0,0), Quaternion.identity);
         NetworkServer.Spawn(card, connectionToClient);
-        card.GetComponent<CardDetails>().SetCardHealth(health);
-        card.GetComponent<CardDetails>().SetCardAttack(attack);
-        RpcSummonMinion(forPlayer, card);
+        RpcSummonMinion(health, attack, forPlayer, card);
     }
 
     [ClientRpc]
-    public void RpcSummonMinion(bool forPlayer, GameObject card)
+    public void RpcSummonMinion(int health, int attack, bool forPlayer, GameObject card)
     {
+        card.GetComponent<CardDetails>().CardHealth = health;
+        card.GetComponent<CardDetails>().CardAttack = attack;
+        CmdUpdateAllCardText();
         if(isOwned)
         {
             if(forPlayer)
             {
-                card.GetComponent<CardDetails>().UpdateCardText();
                 card.transform.SetParent(PlayerSlot.transform, false);
                 Debug.Log("A");
             }
             else
             {
-                card.GetComponent<CardDetails>().UpdateCardText();
                 card.transform.SetParent(EnemySlot.transform, false);
                 Debug.Log("B");
             }
@@ -773,17 +787,53 @@ public class PlayerManager : NetworkBehaviour
         {
             if(forPlayer)
             {
-                card.GetComponent<CardDetails>().UpdateCardText();
                 card.transform.SetParent(EnemySlot.transform, false);
                 Debug.Log("C");
 
             }
             else
             {
-                card.GetComponent<CardDetails>().UpdateCardText();
                 card.transform.SetParent(PlayerSlot.transform, false);
                 Debug.Log("D");
             }
         }
+    }
+
+    public void DiscardCards(int amount, bool forPlayer)
+    {
+        if(isOwned)
+        {
+            for (int i = 0; i < amount; i ++)
+            {
+                Debug.Log(PlayerArea.transform.childCount);
+                int ranNum = Random.Range(0,PlayerArea.transform.childCount);
+                int count = 0;
+
+                foreach (Transform child in PlayerArea.GetComponentInChildren<Transform>())
+                {
+                    if (child.gameObject.tag == "Cards")
+                    {
+                        if(count == ranNum)
+                        {
+                            Debug.Log(child.gameObject);
+                            CmdDiscardCards(child.gameObject);
+                        }
+                        count++;
+                    }
+                }
+            }
+        }
+    }
+
+    [Command]
+    public void CmdDiscardCards(GameObject card)
+    {
+        RpcDiscardCards(card);
+    }
+
+    [ClientRpc]
+    public void RpcDiscardCards(GameObject card)
+    {
+        Destroy(card);
     }
 }

@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class MG_CS : CardAbilities
+public class SubstitutionGolem_CS : CardAbilities
 {
     public override void OnEntry()
     {
-        PlayerManager.CmdUpdateDoubloons(2, true);
     }
 
     public override void OnEndTurn()
     {
-     
+
     }
 
     public override void OnHit()
@@ -22,7 +21,10 @@ public class MG_CS : CardAbilities
     
     public override void OnLastResort()
     {
-
+        if(isOwned)
+        {
+            PlayerManager.CmdSummonMinion(4,4,true);
+        }
     }
 
     public override void OnSilenced()

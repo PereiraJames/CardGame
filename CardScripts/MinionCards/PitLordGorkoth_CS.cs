@@ -3,38 +3,47 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class UnseenDevastation : CardAbilities
+
+public class PitLordGorkoth_CS : CardAbilities
 {
     public override void OnEntry()
     {
-       GameObject EnemySlot = PlayerManager.EnemySlot;
-       GameObject PlayerSlot = PlayerManager.PlayerSlot;
+        int totalDead = 0;
+
+        GameObject EnemySlot = PlayerManager.EnemySlot;
+        GameObject PlayerSlot = PlayerManager.PlayerSlot;
 
         foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
         {
             if (child.gameObject.tag == "Cards")
             {
-                if(child.GetComponent<CardDetails>().GetCardHealth() < 5)
+                if(child.gameObject.GetComponent<CardDetails>().GetCardHealth() == 1)
                 {
-                    Destroy(child.gameObject);
+                    totalDead ++;
                 }
+                PlayerManager.CmdDealDamage(child.gameObject, 1);
             }
         }
+
         foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
         {
             if (child.gameObject.tag == "Cards")
             {
-                if(child.GetComponent<CardDetails>().GetCardHealth() < 5)
+                if(child.gameObject.GetComponent<CardDetails>().GetCardHealth() == 1)
                 {
-                    Destroy(child.gameObject);
+                    totalDead ++;
                 }
+                PlayerManager.CmdDealDamage(child.gameObject, 1);
             }
         }
+
+        PlayerManager.CmdDealCards(totalDead, GameManager.PlayerDeck);
+
     }
 
     public override void OnEndTurn()
     {
-        
+
     }
 
     public override void OnHit()

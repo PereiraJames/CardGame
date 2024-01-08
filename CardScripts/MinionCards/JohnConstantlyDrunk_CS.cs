@@ -4,24 +4,22 @@ using UnityEngine;
 using Mirror;
 
 
-public class CorporalOng_CS : CardAbilities
+public class JohnConstantlyDrunk_CS : CardAbilities
 {
     public override void OnEntry()
     {
-        return;
+        PlayerManager.CmdSummonMinion(1,1,false);
+        PlayerManager.CmdSummonMinion(1,1,false);
     }
 
     public override void OnEndTurn()
     {
-        
+
     }
 
     public override void OnHit()
     {
-        if(isOwned)
-        {
-            PlayerManager.CmdDealCards(1,GameManager.PlayerDeck);
-        }
+
     }
     
     public override void OnLastResort()

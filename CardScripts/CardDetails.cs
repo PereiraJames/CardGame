@@ -50,11 +50,13 @@ public class CardDetails : NetworkBehaviour
     public void SetCardHealth(int DamageDone)
     {
         CardHealth -= DamageDone;
+        UpdateCardText();
     }
 
     public void PermSetCardHealth(int newHealth)
     {
         CardHealth = newHealth;
+        UpdateCardText();
     }
 
     public int GetCardAttack()
@@ -65,6 +67,7 @@ public class CardDetails : NetworkBehaviour
     public void SetCardAttack(int attackAmount)
     {
         CardAttack = attackAmount;
+        UpdateCardText();
     }
 
     public bool IsAbleToAttack()
@@ -75,6 +78,7 @@ public class CardDetails : NetworkBehaviour
     public void AttackTurn(bool HasAttackedThisTurn)
     {
         CanAttack = HasAttackedThisTurn;
+        UpdateCardText();
     }
 
     public void UpdateCardText()
@@ -85,7 +89,7 @@ public class CardDetails : NetworkBehaviour
 
     //CARD ATTACK START
 
-        public void AttackTarget()
+    public void AttackTarget()
     {
         if (PlayerManager.IsMyTurn && isOwned && gameObject.GetComponent<CardDetails>().IsAbleToAttack()) //Must be on players turn, player must have authourity of card and the card must be able to attack
         {

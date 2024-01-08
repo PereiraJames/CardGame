@@ -25,7 +25,7 @@ public class GameManager : NetworkBehaviour
     public int EnemyDeckSize = 0;
     public int PlayerDeckSize = 0;
 
-    public int TotalDoubloons = 40;
+    public int TotalDoubloons = 20;
 
     private int ReadyClicks = 0;
 
@@ -205,6 +205,20 @@ public class GameManager : NetworkBehaviour
             {
                 currentEnemyDoubloons -= amount;
             }
+        }
+
+        UIManager.UpdatePlayerText();
+    }
+
+    public void SetPlayerHealth(int health, bool isOwned)
+    {
+        if(isOwned)
+        {
+            PlayerHealth = health;
+        }
+        else
+        {
+            EnemyHealth = health;
         }
 
         UIManager.UpdatePlayerText();

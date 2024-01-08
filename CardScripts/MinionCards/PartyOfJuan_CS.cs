@@ -1,27 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
 
-
-public class CorporalOng_CS : CardAbilities
+public class PartyOfJuan_CS : CardAbilities
 {
     public override void OnEntry()
     {
-        return;
+
     }
 
     public override void OnEndTurn()
     {
-        
+        PlayerManager.CmdSummonMinion(2,2,true);
     }
 
     public override void OnHit()
     {
-        if(isOwned)
-        {
-            PlayerManager.CmdDealCards(1,GameManager.PlayerDeck);
-        }
+
     }
     
     public override void OnLastResort()

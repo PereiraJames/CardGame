@@ -4,24 +4,22 @@ using UnityEngine;
 using Mirror;
 
 
-public class CorporalOng_CS : CardAbilities
+public class LoudSpeaker_CS : CardAbilities
 {
     public override void OnEntry()
     {
-        return;
+        PlayerManager.CmdGMPlayerHealth(-2);
+        PlayerManager.CmdDealCards(1, GameManager.PlayerDeck);
     }
 
     public override void OnEndTurn()
     {
-        
+
     }
 
     public override void OnHit()
     {
-        if(isOwned)
-        {
-            PlayerManager.CmdDealCards(1,GameManager.PlayerDeck);
-        }
+
     }
     
     public override void OnLastResort()
