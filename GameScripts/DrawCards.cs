@@ -49,7 +49,7 @@ public class DrawCards : NetworkBehaviour
 
     void Endturn()
     {
-        PlayerManager.CmdDealCards(1, GameManager.PlayerDeck, true);
+        PlayerManager.CmdDealCards(1, GameManager.PlayerDeck);
         PlayerManager.CmdEndTurn();
     }
 

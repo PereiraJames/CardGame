@@ -20,7 +20,7 @@ public class CorporalOng_CS : CardAbilities
     {
         if(isOwned)
         {
-            PlayerManager.CmdDealCards(1,GameManager.PlayerDeck, true);
+            PlayerManager.CmdDealCards(1,GameManager.PlayerDeck);
         }
     }
     
