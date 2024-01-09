@@ -220,7 +220,7 @@ public class PlayerManager : NetworkBehaviour
         Debug.Log("isServer: " + isServer + " isClient" + isClient);
         if(NetworkServer.connections.Count == 1)
         {
-            NetworkManager.singleton.StopServer();
+            NetworkManager.StopHost();
         }
     }
 
@@ -234,17 +234,6 @@ public class PlayerManager : NetworkBehaviour
     public void RpcConcedeGame()
     {
         CmdGMPlayerHealth(-1000);
-        Debug.Log(NetworkServer.connections.Count);
-
-        if(isOwned)
-        {
-            SceneManager.LoadScene("MainMenu");
-        }
-
-        if(NetworkServer.connections.Count == 1)
-        {
-            NetworkManager.StopHost();
-        }
     }
 
     [Command]

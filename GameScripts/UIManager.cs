@@ -46,13 +46,26 @@ public class UIManager : NetworkBehaviour
 
         if (Win)
         {
-            Display.GetComponent<Text>().text = "You Win!";
+            foreach (Transform child in Display.GetComponentsInChildren<Transform>())
+            {
+                if(child.gameObject.name == "DisplayText")
+                {
+                    child.GetComponent<Text>().text = "You Win!";
+                }
+            } 
         }
         else
         {
-            Display.GetComponent<Text>().text = "They Win!";
+            foreach (Transform child in Display.GetComponentsInChildren<Transform>())
+            {
+                if(child.gameObject.name == "DisplayText")
+                {
+                    child.GetComponent<Text>().text = "They Win!";
+                }
+            }  
         }
     }
+    
     public void UpdatePlayerText()
     {
         PlayerHealthText.GetComponent<Text>().text = GameManager.PlayerHealth.ToString();

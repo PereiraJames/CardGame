@@ -17,7 +17,6 @@ public class GameUIButtons : NetworkBehaviour
 
     public void LoadMainMenu()
     {
-        SceneManager.LoadScene("MainMenu");
         if(isServer)
         {
             Debug.Log("Server");
@@ -27,6 +26,6 @@ public class GameUIButtons : NetworkBehaviour
             Debug.Log("Client");
         }
         Debug.Log("isServer: " + isServer + " isClient" + isClient);
-        PlayerManager.CmdClientStatus();
+        SceneManager.LoadScene("MainMenu");
     }
 }
