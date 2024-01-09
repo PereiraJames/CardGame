@@ -34,6 +34,8 @@ public class PlayerManager : NetworkBehaviour
 
     public int cardsPlayed = 0;
 
+    public int handLimit = 8;
+
     public bool AttackBeingMade = false;
     public bool DestroyBeingMade = false;
 
@@ -262,12 +264,12 @@ public class PlayerManager : NetworkBehaviour
                 int ranNum = Random.Range(0,deck.Count - 1);
                 GameObject card = Instantiate(deck[ranNum], new Vector3(0,0,0), Quaternion.identity);
                 NetworkServer.Spawn(card, connectionToClient);
-                if (isOwned && GameManager.PlayerHandSize + 1 < 8)
+                if (isOwned && GameManager.PlayerHandSize + 1 < handLimit)
                 {
                     RpcSetParentCard(card);
                     deck.RemoveAt(ranNum);
                 }
-                else if (!isOwned && GameManager.PlayerHandSize + 1 < 8)
+                else if (!isOwned && GameManager.PlayerHandSize + 1 < handLimit)
                 {
                     RpcSetParentCard(card);
                     deck.RemoveAt(ranNum);
@@ -796,6 +798,29 @@ public class PlayerManager : NetworkBehaviour
     public void RpcChangeBP(int playerBp, int enemyBp)
     {
         GameManager.ChangeBP(playerBp, enemyBp, isOwned);
+    }
+
+    [Command]
+    public void CmdCardStatChange(int attack, int health, GameObject card)
+    {
+        RpcCardStatChange(attack, health, card);
+    }
+
+    [ClientRpc]
+    public void RpcCardStatChange(int attack, int health, GameObject card)
+    {
+        card.GetComponent<CardDetails>().SetCardHealth(health);
+        card.GetComponent<CardDetails>().ChangeCardAttack(attack);
+
+        int CardHealth = card.GetComponent<CardDetails>().GetCardHealth();
+        CmdUpdateAllCardText();
+
+        if(CardHealth < 1)
+        {
+            card.GetComponent<CardZoom>().OnHoverExit();
+            card.GetComponent<CardAbilities>().OnLastResort();
+            Destroy(card);
+        }
     }
 
     [Command]

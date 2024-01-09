@@ -4,35 +4,24 @@ using UnityEngine;
 using Mirror;
 
 
-public class TheonSlothBorne_CS : CardAbilities
+public class BattleMedic_CS : CardAbilities
 {
     public override void OnEntry()
     {
-      
-    }
-
-    public override void OnEndTurn()
-    {
-        GameObject EnemySlot = PlayerManager.EnemySlot;
         GameObject PlayerSlot = PlayerManager.PlayerSlot;
-
-        int amountofPlayerCards = 0;
 
         foreach (Transform child in PlayerSlot.GetComponentsInChildren<Transform>())
         {
             if (child.gameObject.tag == "Cards")
             {
-                amountofPlayerCards++;
+                PlayerManager.CmdCardStatChange(1,1,child.gameObject);
             }
-        } 
+        }
+    }
 
-        foreach (Transform child in EnemySlot.GetComponentsInChildren<Transform>())
-        {
-            if (child.gameObject.tag == "Cards")
-            {
-                PlayerManager.CmdDealDamage(child.gameObject, amountofPlayerCards);
-            }
-        } 
+    public override void OnEndTurn()
+    {
+
     }
 
     public override void OnHit()

@@ -16,6 +16,7 @@ public class DragDrop : NetworkBehaviour
     private GameObject dropZone;
     private GameObject startParent;
     private Vector2 startPosition;
+    private int CardsInPlayLimit = 8;
     
 
     private void Start()
@@ -92,7 +93,7 @@ public class DragDrop : NetworkBehaviour
             }
         }
 
-        if (isOverDropZone && PlayerManager.IsMyTurn && cardCost <= currentPlayerDoubloons && PlayerSlotCardTotal < 6)
+        if (isOverDropZone && PlayerManager.IsMyTurn && cardCost <= currentPlayerDoubloons && PlayerSlotCardTotal < CardsInPlayLimit)
         {
             PlayerManager.CmdUpdateDoubloons(cardCost,false);
             transform.SetParent(dropZone.transform, false);

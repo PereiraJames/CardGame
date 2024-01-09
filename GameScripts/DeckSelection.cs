@@ -42,7 +42,6 @@ public class DeckSelection : NetworkBehaviour
             {
                 if(child.gameObject.tag == "DeckUI")
                 {
-                    child.GetComponent<Image>().color = Color.red;
                     child.GetComponent<Button>().interactable = false;
                 }
             }

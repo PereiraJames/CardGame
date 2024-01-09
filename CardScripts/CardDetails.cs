@@ -70,6 +70,12 @@ public class CardDetails : NetworkBehaviour
         UpdateCardText();
     }
 
+    public void ChangeCardAttack(int attackAmount)
+    {
+        CardAttack += attackAmount;
+        UpdateCardText();
+    }
+
     public bool IsAbleToAttack()
     {
         return CanAttack;

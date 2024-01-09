@@ -16,7 +16,7 @@ public class UnseenDevastation : CardAbilities
             {
                 if(child.GetComponent<CardDetails>().GetCardHealth() < 5)
                 {
-                    Destroy(child.gameObject);
+                    PlayerManager.CmdDestroyTarget(child.gameObject);
                 }
             }
         }
@@ -26,7 +26,7 @@ public class UnseenDevastation : CardAbilities
             {
                 if(child.GetComponent<CardDetails>().GetCardHealth() < 5)
                 {
-                    Destroy(child.gameObject);
+                    PlayerManager.CmdDestroyTarget(child.gameObject);
                 }
             }
         }
