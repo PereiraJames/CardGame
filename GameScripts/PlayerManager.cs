@@ -106,10 +106,18 @@ public class PlayerManager : NetworkBehaviour
         EnemySockets.Add(EnemySlot);
 
         AttackingDisplay = GameObject.Find("AttackingDisplay");
+        
 
         if(isClientOnly)
         {
             IsMyTurn = true;
+
+            int ranNum = Random.Range(0,1);
+            Debug.Log(ranNum);
+            if(ranNum == 1)
+            {
+                RpcSwapTurn();
+            } 
         }
 
         Debug.Log("MarkDeckSize : " + MarkDeck.Count);
@@ -117,6 +125,8 @@ public class PlayerManager : NetworkBehaviour
         Debug.Log("KeaganDeckSize : " + KeaganDeck.Count);
         Debug.Log("DeionDeckSize : " + DeionDeck.Count);
     }
+
+
 
     public int Decksize(string deckName)
     {
@@ -189,6 +199,13 @@ public class PlayerManager : NetworkBehaviour
                 }
             }
         }
+    }
+
+    [ClientRpc]
+    public void RpcSwapTurn()
+    {
+        PlayerManager pm = NetworkClient.connection.identity.GetComponent<PlayerManager>();
+        pm.IsMyTurn = !pm.IsMyTurn;
     }
 
     [Command]
@@ -269,12 +286,14 @@ public class PlayerManager : NetworkBehaviour
             {
                 card.transform.SetParent(PlayerArea.transform, false);
                 GameManager.PlayerDeckSize --;
+                GameManager.PlayerHandSize ++;
             }
             else
             {
                 card.transform.SetParent(EnemyArea.transform, false);
                 card.GetComponent<CardFlipper>().Flip();
                 GameManager.EnemyDeckSize --;
+                GameManager.EnemyHandSize ++;
             }
         }
         else
@@ -284,11 +303,13 @@ public class PlayerManager : NetworkBehaviour
                 card.transform.SetParent(EnemyArea.transform, false);
                 card.GetComponent<CardFlipper>().Flip();
                 GameManager.EnemyDeckSize --;
+                GameManager.EnemyHandSize ++;
             }
             else
             {
                 card.transform.SetParent(PlayerArea.transform, false);
                 GameManager.PlayerDeckSize --;
+                GameManager.PlayerHandSize ++;
             }
         }
     }
