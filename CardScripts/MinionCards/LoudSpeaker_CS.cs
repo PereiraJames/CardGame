@@ -9,7 +9,7 @@ public class LoudSpeaker_CS : CardAbilities
     public override void OnEntry()
     {
         PlayerManager.CmdGMPlayerHealth(-2);
-        PlayerManager.CmdDealCards(1, GameManager.PlayerDeck, true);
+        PlayerManager.CmdDealCards(1, GameManager.PlayerDeck);
     }
 
     public override void OnEndTurn()

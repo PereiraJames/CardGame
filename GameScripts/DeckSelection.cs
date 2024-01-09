@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Mirror;
 
 public class DeckSelection : NetworkBehaviour
@@ -30,20 +31,31 @@ public class DeckSelection : NetworkBehaviour
         GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         NetworkIdentity networkIdentity = NetworkClient.connection.identity;
         PlayerManager = networkIdentity.GetComponent<PlayerManager>();
+        DeckSelectionUI = GameObject.Find("DeckSelectionUI");
 
         if(GameManager.PlayerDeck != "")
         {
-            bool bothPlayersReady = false;
-            Debug.Log("Player Ready");
-            if (GameManager.EnemyDeck != "")
+        
+            PlayerManager.CmdDealCards(5,GameManager.PlayerDeck);
+            PlayerManager.CmdPlayerReadyUp();
+            foreach (Transform child in DeckSelectionUI.GetComponentsInChildren<Transform>())
             {
-                bothPlayersReady = true;
+                if(child.gameObject.tag == "DeckUI")
+                {
+                    child.GetComponent<Image>().color = Color.red;
+                    child.GetComponent<Button>().interactable = false;
+                }
             }
-            PlayerManager.CmdDestoryDeckSelectionUI(bothPlayersReady);
         }
 
-        //FOR TESTING!
-        // PlayerManager.CmdDestoryDeckSelectionUI(true);
+        if(GameManager.EnemyReady == true)
+        {
+            PlayerManager.CmdDestoryDeckSelectionUI();
+        }  
+
+        gameObject.GetComponent<Button>().interactable = false;
+
+        Debug.Log(GameManager.EnemyReady);
 
     } 
 }

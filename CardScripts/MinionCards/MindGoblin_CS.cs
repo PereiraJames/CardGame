@@ -8,7 +8,7 @@ public class MindGoblin_CS : CardAbilities
     public override void OnEntry()
     {
         PlayerManager.CmdGMPlayerHealth(-2);
-        PlayerManager.CmdDealCards(1, GameManager.PlayerDeck, true);
+        PlayerManager.CmdDealCards(1, GameManager.PlayerDeck);
         PlayerManager.CmdUpdateDoubloons(2, true);
     }
 

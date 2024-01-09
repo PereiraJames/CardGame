@@ -40,6 +40,8 @@ public class PlayerManager : NetworkBehaviour
     public bool AttackDisplayOpened = false;
     public GameObject AttackingDisplay;
 
+    private int currentPlayerCount = 0;
+
 
     public NetworkManager NetworkManager;
 
@@ -76,7 +78,6 @@ public class PlayerManager : NetworkBehaviour
     [SyncVar]
     public List <GameObject> DeionDeck = new List<GameObject>();
 
-
     // [SyncVar]
     // int cardsPlayed = 0;
 
@@ -110,6 +111,8 @@ public class PlayerManager : NetworkBehaviour
 
         if(isClientOnly)
         {
+            CmdDestroyWaitingScreen();
+
             IsMyTurn = true;
 
             int ranNum = Random.Range(0,1);
@@ -124,9 +127,8 @@ public class PlayerManager : NetworkBehaviour
         Debug.Log("ChrisDeckSize : " + ChrisDeck.Count);
         Debug.Log("KeaganDeckSize : " + KeaganDeck.Count);
         Debug.Log("DeionDeckSize : " + DeionDeck.Count);
+        Debug.Log(NetworkServer.connections.Count);
     }
-
-
 
     public int Decksize(string deckName)
     {
@@ -183,7 +185,7 @@ public class PlayerManager : NetworkBehaviour
     [Server]
     public override void OnStartServer()
     {
-
+        currentPlayerCount = 0;
         NetworkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
 
         foreach (GameObject card in NetworkManager.spawnPrefabs) //Auto puts prefabs into a list(or a deck)
@@ -234,8 +236,6 @@ public class PlayerManager : NetworkBehaviour
     public void RpcConcedeGame()
     {
         CmdGMPlayerHealth(-1000);
-        Debug.Log(NetworkServer.connections.Count);
-
         if(isOwned)
         {
             SceneManager.LoadScene("MainMenu");
@@ -248,8 +248,21 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdDealCards(int cardAmount, string deckName, bool forPlayer)
+    public void CmdDestroyWaitingScreen()
     {
+        RpcDestroyWaitingScreen();
+    }
+
+    [ClientRpc]
+    public void RpcDestroyWaitingScreen()
+    {
+        Destroy(GameObject.Find("WaitingScreenUI"));
+    }
+
+    [Command]
+    public void CmdDealCards(int cardAmount, string deckName)
+    {
+        Debug.Log("CardDealt");
         for (int i = 0; i < cardAmount; i++)
         {
             List<GameObject> deck = CmdWhichDeck(deckName);
@@ -260,12 +273,12 @@ public class PlayerManager : NetworkBehaviour
                 NetworkServer.Spawn(card, connectionToClient);
                 if (isOwned && GameManager.PlayerHandSize + 1 < 8)
                 {
-                    RpcSetParentCard(card, forPlayer);
+                    RpcSetParentCard(card);
                     deck.RemoveAt(ranNum);
                 }
                 else if (!isOwned && GameManager.PlayerHandSize + 1 < 8)
                 {
-                    RpcSetParentCard(card, forPlayer);
+                    RpcSetParentCard(card);
                     deck.RemoveAt(ranNum);
                 }
                 else
@@ -278,39 +291,20 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    void RpcSetParentCard(GameObject card, bool forPlayer)
+    void RpcSetParentCard(GameObject card)
     {
-        if(forPlayer)
+        if(isOwned)
         {
-            if(isOwned)
-            {
-                card.transform.SetParent(PlayerArea.transform, false);
-                GameManager.PlayerDeckSize --;
-                GameManager.PlayerHandSize ++;
-            }
-            else
-            {
-                card.transform.SetParent(EnemyArea.transform, false);
-                card.GetComponent<CardFlipper>().Flip();
-                GameManager.EnemyDeckSize --;
-                GameManager.EnemyHandSize ++;
-            }
+            card.transform.SetParent(PlayerArea.transform, false);
+            GameManager.PlayerDeckSize --;
+            GameManager.PlayerHandSize ++;
         }
         else
         {
-            if(isOwned)
-            {
-                card.transform.SetParent(EnemyArea.transform, false);
-                card.GetComponent<CardFlipper>().Flip();
-                GameManager.EnemyDeckSize --;
-                GameManager.EnemyHandSize ++;
-            }
-            else
-            {
-                card.transform.SetParent(PlayerArea.transform, false);
-                GameManager.PlayerDeckSize --;
-                GameManager.PlayerHandSize ++;
-            }
+            card.transform.SetParent(EnemyArea.transform, false);
+            card.GetComponent<CardFlipper>().Flip();
+            GameManager.EnemyDeckSize --;
+            GameManager.EnemyHandSize ++;
         }
     }
 
@@ -536,6 +530,31 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [Command]
+    public void CmdPlayerReadyUp()
+    {
+        RpcPlayerReadyUp();
+    }
+
+    [ClientRpc]
+    public void RpcPlayerReadyUp()
+    {
+        if(isOwned)
+        {
+            GameManager.PlayerReady = true;
+        }
+        else
+        {
+            GameManager.EnemyReady = true;
+        }
+    }
+
+    [Command]
+    public void CmdAmountOfPlayers()
+    {
+
+    }
+
+    [Command]
     public void CmdDeckSelection(string DeckTag)
     {
         RpcDeckSelection(DeckTag);
@@ -642,21 +661,23 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdDestoryDeckSelectionUI(bool bothPlayersReady)
+    public void CmdDestoryDeckSelectionUI()
     {
-        RpcDestroyDeckSelectionUI(bothPlayersReady);
+        RpcDestroyDeckSelectionUI();
     }
 
     [ClientRpc]
-    public void RpcDestroyDeckSelectionUI(bool bothPlayersReady)
+    public void RpcDestroyDeckSelectionUI()
     {
-        if(bothPlayersReady == true)
-        {
-            Destroy(GameObject.Find("DeckSelectionUI"));
-            CmdDealCards(5, GameManager.PlayerDeck, true);
-            CmdDealCards(5, GameManager.EnemyDeck, false);
-            GameManager.HighLightStart();
-        }
+        Destroy(GameObject.Find("DeckSelectionUI"));
+        GameManager.HighLightStart();
+        // if(bothPlayersReady == true)
+        // {
+        //     Destroy(GameObject.Find("DeckSelectionUI"));
+        //     // CmdDealCards(5, GameManager.PlayerDeck, true);
+        //     // CmdDealCards(5, GameManager.EnemyDeck, false);
+        //     GameManager.HighLightStart();
+        // }
     }
 
     [Command]
