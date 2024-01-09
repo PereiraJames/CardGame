@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class Mama_CS : CardAbilities
+public class TripleThreat_CS : CardAbilities
 {
     public override void OnEntry()
     {
@@ -15,12 +15,12 @@ public class Mama_CS : CardAbilities
         {
             if (child.gameObject.tag == "Cards")
             {
-                if(child.gameObject.name == "Joe(Clone)")
+                if(child.gameObject.name == "TripleThreat(Clone)")
                 {
                     if(count == 0)
                     {
-                        PlayerManager.CmdUpdateDoubloons(5, true);
-                        count ++;
+                        PlayerManager.CmdSummonMinion(4,4,true);
+                        count++;
                     }
                 }
             }
