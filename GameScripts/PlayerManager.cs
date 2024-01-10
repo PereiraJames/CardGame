@@ -7,11 +7,6 @@ using Mirror;
 
 public class PlayerManager : NetworkBehaviour
 {
-    // public GameObject Ping;
-    // public GameObject UD;
-    // public GameObject FD;
-    // public GameObject RS;
-    // public GameObject MG;
     public GameObject WinText;
 
     public GameObject PlayerArea;
@@ -80,10 +75,6 @@ public class PlayerManager : NetworkBehaviour
     [SyncVar]
     public List <GameObject> DeionDeck = new List<GameObject>();
 
-    // [SyncVar]
-    // int cardsPlayed = 0;
-
-    // Start is called before the first frame update
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -493,22 +484,6 @@ public class PlayerManager : NetworkBehaviour
 
     }
 
-    // [Command]
-    // public void CmdGMChangeState(string stateRequest)
-    // {
-    //     RpcGMChangeState(stateRequest);
-    // }
-
-
-    // [ClientRpc]
-    // void RpcGMChangeState(string stateRequest)
-    // {
-    //     GameManager.ChangeGameState(stateRequest);
-    //     if (stateRequest == "End Turn")
-    //     {
-    //         GameManager.ChangeReadyClicks();
-    //     }
-    // }
 
     [Command]
     void CmdGMCardPlayed()
@@ -664,13 +639,6 @@ public class PlayerManager : NetworkBehaviour
     {
         Destroy(GameObject.Find("DeckSelectionUI"));
         GameManager.HighLightStart();
-        // if(bothPlayersReady == true)
-        // {
-        //     Destroy(GameObject.Find("DeckSelectionUI"));
-        //     // CmdDealCards(5, GameManager.PlayerDeck, true);
-        //     // CmdDealCards(5, GameManager.EnemyDeck, false);
-        //     GameManager.HighLightStart();
-        // }
     }
 
     [Command]
@@ -694,8 +662,6 @@ public class PlayerManager : NetworkBehaviour
         }
         
         AttackingTarget.GetComponent<CardDetails>().DealAttack();
-
-        // AttackingTarget.GetComponent<CardAttack>().DealAttack();
     }
 
     [Command]
@@ -734,11 +700,9 @@ public class PlayerManager : NetworkBehaviour
         PlayerCardHealth -= EnemyAttackDamage;
         EnemyCardHealth -= PlayerAttackDamage;
         AttackedTarget.GetComponent<CardDetails>().SetCardHealth(EnemyCardHealth);
-        // AttackedTarget.GetComponent<CardDetails>().UpdateCardText();
         AttackingTarget.GetComponent<CardDetails>().AttackTurn(false);
 
         AttackingTarget.GetComponent<CardDetails>().SetCardHealth(PlayerCardHealth);
-        // AttackingTarget.GetComponent<CardDetails>().UpdateCardText();
 
         AttackingTarget.GetComponent<CardAbilities>().OnHit();
         AttackedTarget.GetComponent<CardAbilities>().OnHit();

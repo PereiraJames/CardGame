@@ -34,50 +34,15 @@ public class GameManager : NetworkBehaviour
     public bool PlayerReady;
     public bool EnemyReady;
 
-    // Start is called before the first frame update
     void Start()
     {
         UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
-        // UIManager.UpdatePlayerText();
         UIManager.UpdateButtonText(GameState); 
         PlayerSlot = GameObject.Find("PlayerSlot");
 
         currentEnemyDoubloons = totalEnemyDoubloons;
         currentPlayerDoubloons = totalPlayerDoubloons;
     }
-
-    public void Update()
-    {
-
-    }
-
-    // public void ChangeGameState(string stateRequest)
-    // {
-    //     if (stateRequest == "Initialize {}")
-    //     {
-    //         ReadyClicks = 0;
-    //         GameState = "Initialize {}";
-    //     }
-    //     else if (stateRequest == "End Turn")
-    //     {
-    //         if (ReadyClicks == 1)
-    //         {
-    //             GameState = "End Turn";
-    //             UIManager.HighlightTurn(TurnOrder);
-    //         }
-    //     }
-    //     else if (stateRequest == "Execute {}")
-    //     {
-    //         GameState = "Execute {}";
-    //         TurnOrder = 0;
-    //     }
-    //     UIManager.UpdateButtonText(GameState);
-    // }
-
-    // public void ChangeReadyClicks()
-    // {
-    //     ReadyClicks++;
-    // }
 
     public void CardPlayed()
     {
@@ -109,33 +74,8 @@ public class GameManager : NetworkBehaviour
             }
         }
 
-        // if (TurnOrder == 10)
-        // {
-        //     ChangeGameState("Execute {}");
-
-        // }
         UIManager.UpdatePlayerText();
     }
-
-    // public void DrawCard(int amount, List<GameObject> deck)
-    // {   
-    //     while (PlayerHandSize + amount > 8)
-    //     {
-    //         amount --;
-    //         if (amount = 0)
-    //         {
-    //             break;
-    //         }
-    //     }
-    //     if (amount > 0)
-    //     {
-    //         PlayerManager.CmdDealCards(amount, deck);
-    //     }
-    //     else
-    //     {
-    //         Debug.Log("Drawing No")
-    //     }
-    // }
 
     public void HighLightStart()
     {

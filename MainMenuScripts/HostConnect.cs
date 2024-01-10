@@ -50,19 +50,13 @@ public class HostConnect : MonoBehaviour
 
     public bool IsNetworkAddressValid(string address)
     {
-        // Check if the address is not null or empty and meets other required conditions
         bool isValid = !string.IsNullOrEmpty(address) && IsValidIPFormat(address);
 
         return isValid;
     }
 
-    // Example method to check if the address is a valid IP format (you can expand this as needed)
     bool IsValidIPFormat(string address)
     {
-        // Implement your logic here to validate the IP address format
-        // Example: You might use regular expressions or other methods to validate the IP address format
-        // This is a basic example just to show the idea
-
         bool isValid = System.Net.IPAddress.TryParse(address, out _);
         return isValid;
     }

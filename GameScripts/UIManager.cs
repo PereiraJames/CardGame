@@ -98,44 +98,5 @@ public class UIManager : NetworkBehaviour
             PlayerManager.PlayerImage.GetComponent<Image>().color = Color.red;
             Button.GetComponentInChildren<Text>().color = Color.gray;
         }
-            // if (turnOrder == 0)
-            // {
-            //     if (PlayerManager.IsMyTurn)
-            //     {
-            //         PlayerManager.PlayerImage.GetComponent<Image>().color = Color.white;
-            //         PlayerManager.EnemyImage.GetComponent<Image>().color = Color.red;
-            //         Button.GetComponentInChildren<Text>().color = Color.white;
-            //     }
-            //     else
-            //     {
-            //         PlayerManager.EnemyImage.GetComponent<Image>().color = Color.white;
-            //         PlayerManager.PlayerImage.GetComponent<Image>().color = Color.red;
-            //         Button.GetComponentInChildren<Text>().color = Color.gray;
-            //     }
-            // }
-            // else if (turnOrder > 0)
-            // {
-            //     if(PlayerManager.IsMyTurn)
-            //     {
-            //         PlayerManager.PlayerImage.GetComponent<Image>().color = Color.white;
-            //         PlayerManager.EnemyImage.GetComponent<Image>().color = Color.red;
-            //         Button.GetComponentInChildren<Text>().color = Color.white;
-
-            //         // if(turnOrder > 1)
-            //         // {   
-            //         //     PlayerManager.EnemySlot.GetComponent<Outline>().effectColor = blueColor;
-            //         // }
-            //     }
-            //     else
-            //     {
-            //         PlayerManager.EnemyImage.GetComponent<Image>().color = Color.white;
-            //         PlayerManager.PlayerImage.GetComponent<Image>().color = Color.red;
-            //         Button.GetComponentInChildren<Text>().color = Color.gray;
-            //         // if (turnOrder > 1)
-            //         // {
-            //         //     PlayerManager.PlayerSlot.GetComponent<Outline>().effectColor = blueColor;
-            //         // }
-            //     }
-            // }
     }
 }

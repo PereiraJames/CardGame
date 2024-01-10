@@ -6,6 +6,8 @@ using System.Linq;
 
 public class ResourceManager : MonoBehaviour
 {
+    //Automation of adding Prefabs to NetworkManager.
+    
     [Tooltip("Assets/Resources/[Insert Folder Path]")]
     [SerializeField] private string[] folderPaths = null;
     private bool isDone = false;

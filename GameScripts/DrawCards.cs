@@ -19,43 +19,15 @@ public class DrawCards : NetworkBehaviour
         NetworkIdentity networkIdentity = NetworkClient.connection.identity;
         PlayerManager = networkIdentity.GetComponent<PlayerManager>();
 
-        // if (GameManager.GameState == "Ready")
-        // {
-        //     IntializeClick();
-        // }
-        // else if (GameManager.GameState == "End Turn")
-        // {
-        //     if (PlayerManager.IsMyTurn)
-        //     {
-        //         Endturn();
-        //     }
-        // }
-
         if (PlayerManager.IsMyTurn)
         {
             Endturn();
         }
-        // else if (GameManager.GameState == "Execute {}")
-        // {
-        //     ExecuteClick();
-        // }
     }
-
-    // void IntializeClick()
-    // {
-    //     PlayerManager.CmdDealCards(5, GameManager.PlayerDeck, true);
-    //     PlayerManager.CmdGMChangeState("End Turn");
-    // }
 
     void Endturn()
     {
         PlayerManager.CmdDealCards(1, GameManager.PlayerDeck);
         PlayerManager.CmdEndTurn();
     }
-
-    // void ExecuteClick()
-    // {
-    //     PlayerManager.CmdExecute();
-    //     PlayerManager.CmdGMChangeState("Initialize {}");
-    // }
 }

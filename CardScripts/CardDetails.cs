@@ -24,6 +24,9 @@ public class CardDetails : NetworkBehaviour
     public int DoubloonCost = 1;
     public int amountOfEachCard = 1;
 
+    public bool isFrozen = false;
+    public bool isDamaged = false;
+
     public string DeckTag;
 
     public GameObject CardStats;
@@ -83,7 +86,18 @@ public class CardDetails : NetworkBehaviour
 
     public void AttackTurn(bool HasAttackedThisTurn)
     {
+       
         CanAttack = HasAttackedThisTurn;
+        Debug.Log(CanAttack);
+        if(CanAttack)
+        {
+            gameObject.GetComponent<Image>().color = new Color(255, 255, 255);
+        }
+        else
+        {
+            gameObject.GetComponent<Image>().color = new Color(63, 63, 63);
+        }
+
         UpdateCardText();
     }
 

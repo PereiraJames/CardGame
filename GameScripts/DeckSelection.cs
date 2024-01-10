@@ -22,8 +22,6 @@ public class DeckSelection : NetworkBehaviour
         DeckSelectionUI = GameObject.Find("DeckSelectionUI");
 
         UIManager UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
-
-        // UIManager.SetPlayerUI();
     }
 
     public void PlayerReady()
